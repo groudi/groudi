@@ -27,7 +27,19 @@
           <%= image_tag "clear.png", :class => "clear-search", :alt => "X" %>
         </span>
       </form>
-      </div>     
+      </div>   
+      <div class="col-md-12 text-right">        
+          <button class="btn btn-primary" data-target="#addEditIssues" data-toggle="modal">
+            + Issue
+          </button>
+       <form action = "/issues" method="GET" class="filter-form" role="search">
+        <span class="input-group add-on">
+          <input class="" name="query" placeholder="Search" value="<%= @searched ? @searched : '' %>" type="text">
+          <input class="btn" style="display: none;" name="submit" type="submit" value="Search">
+          <%= image_tag "clear.png", :class => "clear-search", :alt => "X" %>
+        </span>
+      </form>
+      </div>   
       <% if !@issues || @issues.count <= 0%>
 
       <div class="col-md-12 empty_collection">
