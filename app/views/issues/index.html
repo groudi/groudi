@@ -1,18 +1,10 @@
 <div class="container">
-
-  <div class="col-md-12 no-margin-left" style="padding-top:10px;">
+<%= render partial: 'partial/header' %>
+  <div class="col-md-12 no-margin-left" style="padding-top:60px;">
     <div class="ajax-alert alert alert-info" style="display:none;" role="alert">
         <p></p>
     </div>
   </div>
-
-  <% if flash[:notice] %>
-    <div class="col-md-12 no-margin-left" style="padding-top:10px;">
-      <div class="alert alert-info controller-alert">
-        <p><%= flash[:notice] %></p>
-      </div>
-    </div>
-  <% end %>
 
   <div class="box">
     <div class="content row">  
@@ -90,7 +82,7 @@
     </div>
   </div>
 </div>
-
+<%= render partial: 'partial/footer' %>
 
 <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="addEditIssues" role="dialog" tabindex="-1">
   <div class="modal-dialog">
