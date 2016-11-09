@@ -1,0 +1,173 @@
+<div class="container">
+<%= render partial: 'partial/header' %>
+  <div class="col-md-12 no-margin-left" style="padding-top:60px;">
+    <div class="ajax-alert alert alert-info" style="display:none;" role="alert">
+        <p></p>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="content row">  
+      <div class="col-md-12 text-right">        
+          <button class="btn btn-primary" data-target="#addEditIssues" data-toggle="modal">
+            + Issue
+          </button>
+       <form action = "/issues" method="GET" class="filter-form" role="search">
+        <span class="input-group add-on">
+          <input class="" name="query" placeholder="Search" value="<%= @searched ? @searched : '' %>" type="text">
+          <input class="btn" style="display: none;" name="submit" type="submit" value="Search">
+          <%= image_tag "clear.png", :class => "clear-search", :alt => "X" %>
+        </span>
+      </form>
+      </div>   
+      <% if !@issues || @issues.count <= 0%>
+
+      <div class="col-md-12 empty_collection">
+        <p>
+          <% if @searched %>
+            <span class="no-result_from-search">
+          <%= t :no_record_from_search, :search_string=> @searched %>
+          </span>
+          <% else %>
+          <span>
+          <%= t :no_records, :resource_name=> "Available Issues" %>
+          </span>
+          <a href="#" class="btn-link" data-target="#addEditIssues" data-toggle="modal">
+            Create New
+          </a>
+          <span>to get started.</span>
+          <% end %> 
+        </p>
+      </div>
+      <% end %>
+
+      <div class="col-md-12">
+        <table class="table table-striped">        
+          <thead>
+            <tr>
+              <th>Sn.</th>
+              <th>Topic</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="content_tbody">
+          <% if @issues || @issues.count > 0%>
+          <% sn=0 %>
+            <% @issues.each do |issue| %>
+                <% sn+=1 %>
+                <tr>
+                    <td><%=  sn %>.</td>
+                    <td><%= issue.title %></td>
+                    <td><%= issue.desc %> </td>
+                    <td>
+                      <% if issue.status==true %>
+                        Open
+                      <% else %>
+                        Closed
+                      <% end %>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-success">Edit</button>
+                      <button type="button" class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>
+                
+            <% end %>
+          <%end %>
+          </tbody>
+        </table>
+      </div>      
+    </div>
+  </div>
+</div>
+<%= render partial: 'partial/footer' %>
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="addEditIssues" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+<form class="form-horizontal" role="form" id="create-edit-issues-form" action="/create_issue" method="post" data-controller="main" data-label-title="Add Issue">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal" type="button">
+      <span aria-hidden="true">×</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" id="label-title">Add Issue</h4>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+    <input id="method" name="_method" type="hidden" value="post" />
+    
+    <div class="modal-alert alert alert-danger" style="display:none;" role="alert"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="issue_topic">Topic<span class="req-field">*</span></label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" id="issue_topic" name="issue_topic" placeholder="issue topic" required></input>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="issue_description">Description<span class="req-field">*</span></label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" id="issue_description" name="issue_desc" placeholder="about topic" required></input>
+      </div>
+    </div>
+
+    <div class="form-group idea_block">
+      <label class="col-sm-3 control-label" for="issue_idea">Idea<span class="req-field">*</span></label>
+      <div class="col-sm-9">
+        <div class="issue_idea">
+            <div class="form_add">
+              <div class="entry input-group">
+                  <input class="form-control" name="issue_idea[]" type="text" placeholder="idea"/>
+                  <span class="input-group-btn">
+                      <button class="btn btn-success btn-add-issue" type="button">
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                  </span>
+              </div>
+            </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class= "attribute_block issue_attribute">
+      <div class="form_add">
+      <div class="entry">
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="issue_attr">Attribute<span class="req-field">*</span></label>
+        <div class="col-sm-9">
+              <div class="input-group">
+                  <input class="form-control" name="issue_attr[]" type="text" placeholder="evaluation criterion" required/>
+                  <span class="input-group-btn">
+                      <button class="btn btn-success btn-add-attribute" type="button">
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                  </span>
+              </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="attr_desc">More</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="text" id="attr_desc" name="attr_desc[]" placeholder="about attribute"></input>
+        </div>
+    </div>
+      </div><!-- form-add end -->
+    </div>    
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="active">Active<span class="req-field">*</span></label>
+      <input class="inline-checkbox" type="checkbox" name="issue_status" id="active" checked="checked" value="true">
+    </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+    <input type="submit" class="btn btn-primary" value="Save" />
+  </div>
+</form>
+</div>
+</div>
+</div>
