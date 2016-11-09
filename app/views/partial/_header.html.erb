@@ -18,7 +18,9 @@
 <a href="#">Edit Prifile</a>
 </li>
 <li>
-<a href="#">Logout</a>
+  <li>
+  <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
+  </li>
 </li>
 </ul>
 </li>
