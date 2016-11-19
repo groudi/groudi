@@ -57,6 +57,7 @@
           <% sn=0 %>
             <% @issues.each do |issue| %>
                 <% sn+=1 %>
+                
                 <tr>
                     <td><%=  sn %>.</td>
                     <td><%= issue.title %></td>
@@ -69,12 +70,17 @@
                       <% end %>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-success">Edit</button>
-                      <button type="button" class="btn btn-danger">Remove</button>
+                    
+                      <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success button_to_link">Edit</button>
+                      <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_link">Vote</button></a>
+                      <%= button_to 'Remove', issues_path(issue),
+                      method: :delete,
+                      class: :"btn btn-danger",
+                      type: :"button",
+                      data: { confirm: 'Are you sure?' } %>
                     </td>
                 </tr>
-                
-            <% end %>
+              <% end %>
           <%end %>
           </tbody>
         </table>
@@ -82,7 +88,7 @@
     </div>
   </div>
 </div>
-<%= render partial: 'partial/footer' %>
+<!-- <%= render partial: 'partial/footer' %> -->
 
 <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="addEditIssues" role="dialog" tabindex="-1">
   <div class="modal-dialog">
@@ -140,7 +146,7 @@
         <label class="col-sm-3 control-label" for="issue_attr">Attribute<span class="req-field">*</span></label>
         <div class="col-sm-9">
               <div class="input-group">
-                  <input class="form-control" name="issue_attr[]" type="text" placeholder="evaluation criterion" required/>
+                  <input class="form-control" name="attr_title[]" type="text" placeholder="evaluation criterion" required/>
                   <span class="input-group-btn">
                       <button class="btn btn-success btn-add-attribute" type="button">
                           <span class="glyphicon glyphicon-plus"></span>
@@ -150,6 +156,12 @@
         </div>
       </div>
       <div class="form-group">
+        <label class="col-sm-3 control-label" for="attr_weight">Weight</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="text" id="attr_weight" name="attr_weight[]" placeholder="weight for attribute"></input>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-3 control-label" for="attr_desc">More</label>
         <div class="col-sm-9">
           <input class="form-control" type="text" id="attr_desc" name="attr_desc[]" placeholder="about attribute"></input>

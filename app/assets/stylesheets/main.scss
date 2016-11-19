@@ -21,7 +21,6 @@
     margin-top: -13px;
 }
 .footer {
-    position: absolute;
     bottom: 0;
     width: 100%;
     height: 60px;
@@ -39,4 +38,21 @@
 }
 .text-muted {
     color: #777;
+}
+.vote_cast{
+    padding:0px !important;
+}
+.vote_comment{
+    color:dimgray;
+    cursor:pointer;
+}
+.button_to_link {
+    float: left;
+    margin-right: 5px;
+}
+.comment-user-name,.comment-main-thread{
+    margin-bottom:10px;
+}
+.reply-comment{
+    padding-left:0px !important;
 }

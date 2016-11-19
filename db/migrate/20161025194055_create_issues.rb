@@ -6,17 +6,10 @@ class CreateIssues < ActiveRecord::Migration
 		    t.timestamps
 		end
 
-	  create_table :ideas do |t|
-		    t.integer  :issue_id
-		    t.text     :idea
-		    t.datetime :created_at
-		    t.datetime :updated_at
-		    t.timestamps
-	  end
-
 	  create_table :issues do |t|
 		    t.string   :title
 		    t.text     :desc
+		    t.text     :idea
 		    t.boolean  :status
 		    t.text     :creator
 		    t.timestamps
@@ -24,9 +17,9 @@ class CreateIssues < ActiveRecord::Migration
 
 	  create_table :standards do |t|
 		    t.string   :title
+		    t.integer :weight
+		    t.integer  :issue_id
 		    t.text     :desc
-		    t.boolean  :status
-		    t.text     :creator
 		    t.timestamps
 	  end
 	end
