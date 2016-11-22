@@ -50,9 +50,21 @@
     float: left;
     margin-right: 5px;
 }
-.comment-user-name,.comment-main-thread{
-    margin-bottom:10px;
+.comment-box-name,.comment-main-thread{
+    margin-bottom:15px;
 }
-.reply-comment{
-    padding-left:0px !important;
+.comment-main-thread div:first-child{
+    width:97%;
+    float:left;
+}
+.comment-user-name{
+    margin-bottom:5px;
+}
+.template_com_dis{
+    display:none;
+}
+.trash-red{
+    color: #c7254e;
+    font-size:90%;
+    cursor:pointer;
 }

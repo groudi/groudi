@@ -5,11 +5,4 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   protected
-  def require_signed_in_user
-    return redirect_to new_user_session_url, alert: 'Please sign in' unless current_user 
-  end
-
-  def current_user
-    User.new(session[:current_user_attributes]) if session[:current_user_attributes]
-  end
 end

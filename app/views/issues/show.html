@@ -1,3 +1,7 @@
+<%= javascript_tag do %>
+  window.me = '<%= current_user.email %>';
+  window.current_issue = '<%= @issue.id %>';
+<% end %>
 <div class="container">
   <%= render partial: 'partial/header' %>
   <div class="col-md-12 no-margin-left" style="padding-top:60px;">
@@ -9,56 +13,61 @@
   <div class="box">
     <div class="content row">    
       <div class="col-md-12">
-        <div class="bs-callout bs-callout-info" id="callout-glyphicons-location"> 
+        <div class="bs-callout bs-callout-info"> 
           <h4><%= @issue.title %> </h4>
           <p><%= @issue.desc %> </p> 
         </div>
-        <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th> Criterion / Weight</th>
-                <% sn=0 %>
-                <% @issue[:idea].each do |idea| %>
-                <th><%= idea %></th>   
+        <div class="bs-callout bs-callout-info"> 
+          <h4>Your Contribution</h4><h5>Total <code>12</code> contributors including you</h5>
+          <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th> Criterion / Weight</th>
+                  <% sn=0 %>
+                  <% n=0 %>
+                  <% @issue[:idea].each do |idea| %>
+                  <th><%= idea %></th>   
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @issue_attr.each do |criterion| %>
+                <% n+=1 %>
+                <tr>                            
+                  <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>"><%= criterion.title %> / <%= criterion.weight %> </code></th>
+                  <% @issue[:idea].each do |idea| %>
+                  <% sn+=1
+                  counter = sn%@issue[:idea].size
+                  if counter==0
+                  counter = @issue[:idea].size
+                  end %>
+                  <td>
+                    <div class="col-md-9 vote_cast vote_<%= counter %>">
+                      <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" name='vote_cast[<%= idea %>][]' required>
+                    </div>
+                    <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
+                  </td>                
+                  <% end %>
+                </tr>
                 <% end %>
-              </tr>
-            </thead>
-            <tbody>
-              <% @issue_attr.each do |criterion| %>
-              <tr>                            
-                <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>"><%= criterion.title %> / <%= criterion.weight %> </code></th>
-                <% @issue[:idea].each do |idea| %>
-                <% sn+=1
-                counter = sn%@issue[:idea].size
-                if counter==0
-                counter = @issue[:idea].size
-                end %>
-                <td>
-                  <div class="col-md-10 vote_cast vote_<%= counter %>">
-                    <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" name='vote_cast[<%= idea %>][]' required>
-                  </div>
-                  <div class="col-md-2 vote_point" style="color:#bbb;">0</div>
-                </td>                
-                <% end %>
-              </tr>
-              <% end %>
-              <tr>
-                <th>Total</th>
-                <% sn=0 %>
-                <% @issue[:idea].each do |idea| %>
-                <% sn+=1
-                sum = sn%@issue[:idea].size
-                if sum==0
-                sum = @issue[:idea].size
-                end %>
-                <th class="column_sum_<%= sum %>">X</th>               
-                <% end %>
-              </tr>
-            </tbody>
-          </table>
-          <input type="submit" class="btn btn-primary" value="Cast Vote" />
-        </form>
+                <tr>
+                  <th>Total</th>
+                  <% sn=0 %>
+                  <% @issue[:idea].each do |idea| %>
+                  <% sn+=1
+                  sum = sn%@issue[:idea].size
+                  if sum==0
+                  sum = @issue[:idea].size
+                  end %>
+                  <th class="column_sum_<%= sum %>">X</th>               
+                  <% end %>
+                </tr>
+              </tbody>
+            </table>
+            <input type="submit" class="btn btn-primary" value="Cast Vote" />
+          </form>
+        </div>
       </div>      
     </div>
   </div>
@@ -73,74 +82,106 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <div class="row">
-            <div class="col-sm-2">
-              <div class="thumbnail">
-                <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-              </div>
-            </div>
             <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong>myusername</strong>
-              </div>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Add a public comment">
-                <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">Post</button>
-                </span>
+              <div class="comment-box-name">
+                <code><strong>Box plot: Population / Hannover</strong></code>
               </div>
             </div>
           </div>
         </div>
         <div class="panel-body">
-          <div class="col-sm-2">
-            <div class="thumbnail">
-              <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
+              </div>
+              <div class="comment-main-thread">
+              <div>
+                I will give high value to Hannover. I would like to suggest you guys too.
+                Lets all make the Hannover winner once again because of these issues ....
+                </div>
+                <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
+              </div>
             </div>
           </div>
-          <div class="col-sm-10">
-            <div class="comment-user-name">
-              <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
-            </div>
-            <div class="comment-main-thread">
-              I will give high value to Hannover. I would like to suggest you guys too.
-              Lets all make the Hannover winner once again because of these issues ....
-            </div>
-            <div class="row">
+          <div class="row">
             <div class="col-sm-2 reply-comment">
               <div class="thumbnail">
-                <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                <%= image_tag "avatar.png" %>
               </div>
             </div>
 
             <div class="col-sm-10">
               <div class="comment-user-name">
-                <strong>someuserX</strong> <span class="text-muted">commented 2 days ago</span>
-              </div>
-              <div class="comment-sub-thread">
-                Oh no friend! you are on the way to destruction ! save the world
-              </div>
-            </div>
-            </div>
-            <div class="row">
-            <div class="col-sm-2 reply-comment">
-              <div class="thumbnail">
-                <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-              </div>
-            </div>
-
-            <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong>myusername</strong>
+                <strong><%= current_user.email %></strong>
               </div>
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="your response">
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">Reply</button>
+                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="comment-box-name">
+                <code><strong>Box plot: Population / Hannover</strong></code>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
+              </div>
+              <div class="comment-main-thread">
+              <div>
+                I will give high value to Hannover. I would like to suggest you guys too.
+                Lets all make the Hannover winner once again because of these issues ....
+                </div>
+                <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2 reply-comment">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
             </div>
 
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= current_user.email %></strong>
+              </div>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="your response">
+                <span class="input-group-btn">
+                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -149,3 +190,142 @@
   <!-- ends here comment -->
 </div>
 <!-- <%= render partial: 'partial/footer' %> -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_Cost_Magdeburg" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: Cost / Magdeburg</code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
+            </div>
+            <div class="comment-main-thread">
+            <div>
+              I will give high value to Hannover. I would like to suggest you guys too.
+              Lets all make the Hannover winner once again because of these issues ....
+              </div>
+              <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- below are the templates for modal comment popup and comments under discussion heading -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_template" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: </code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row template_com_dis">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-10">
+            <div class="comment-box-name">
+              <code><strong>Box plot: </strong></code>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong> <span class="text-muted">commented 3 days ago</span>
+            </div>
+            <div class="comment-main-thread">
+              .....
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-dismiss="modal" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
