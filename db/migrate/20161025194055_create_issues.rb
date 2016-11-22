@@ -3,6 +3,8 @@ class CreateIssues < ActiveRecord::Migration
      	create_table :comments do |t|
 		    t.integer  :issue_id
 		    t.text     :comment
+		    t.string   :user_id
+		    t.string	:grid
 		    t.timestamps
 		end
 
