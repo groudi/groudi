@@ -77,6 +77,15 @@
       <h3>Discussion </h3>
     </div>
   </div>
+  <% current_section = @comments.first.grid %> 
+  <%@comments.each do |comment|
+    if comment.grid==current_section %>
+      
+    <% else %>
+      <% current_section == comment.grid %>
+      
+    <% end %>
+  <% end %>
   <div class="row">
     <div class="col-sm-8">
       <div class="panel panel-default">

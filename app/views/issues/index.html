@@ -72,7 +72,7 @@
                     <td>
                     
                       <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success button_to_link">Edit</button>
-                      <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_link">Vote</button></a>
+                      <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_vote">Vote</button></a>
                       <%= button_to 'Remove', issues_path(issue),
                       method: :delete,
                       class: :"btn btn-danger",
