@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   get 'issues/:id' => 'issues#get_issue'
   resource :issues
 
-  resource :comments
+  delete 'comment/:id' => 'comment#destroy'
   post 'comment' => 'comment#new'
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

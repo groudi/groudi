@@ -15,7 +15,7 @@ class CommentController < ApplicationController
 	end
 
 	def destroy
-    	@comment = Comment.find(params[:format])
+    	@comment = Comment.find(params[:id])
     	@comment.destroy
     	respond_to do |format|
 	    	format.json { render :json => {:comment => @comment } }

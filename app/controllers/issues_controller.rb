@@ -14,7 +14,7 @@ class IssuesController < ApplicationController
 	    @issue = Issue.find(params[:id])
 	    @issue_attr = Standard.where(issue_id: params[:id])
 	    format.html {
-	    	@comments = Comment.where("comments.issue_id = "+params[:id]).order('grid ASC')
+	    	@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
 	    	render :show, :issue => @issue, :issue_attr => @issue_attr, :comments => @comments
 	 	}
 	    format.json { render :json => {:issue => @issue, :issue_attr => @issue_attr } }
