@@ -6,6 +6,15 @@ var readyDataSource = function() {
       grid_name = $('body').find('tr:eq('+grid_value[0]+')').find('td:eq('+(parseInt(grid_value[1])-1)+')').find('input').attr('data-box');
       $(this).text('Box plot: ' +grid_name.replace('_',' / '));
     });
+    $( "tbody input" ).each(function() {
+      $(this).focus();
+      $(this).trigger('focusout');
+    });
+    $('.aggregate').attr('disabled','disabled');
+    current_page = window.location.pathname;
+    if(current_page.split('/')[1]=="result"){
+      set_winner();
+    }
  };
 
  function crud_issues(){
@@ -153,7 +162,7 @@ var readyDataSource = function() {
 
     $(this).closest('td').find('.vote_point').text($(this)[0].value*$(this).attr('data-weight'));
     $('.vote_'+count).each(function(){
-        totalPoints = parseInt($(this).parent().find('.vote_point').text()) + totalPoints;
+        totalPoints = parseFloat($(this).parent().find('.vote_point').text()) + totalPoints;
     });
     if(totalPoints>0)
     $('.column_sum_'+count).text(totalPoints);
@@ -171,4 +180,30 @@ var readyDataSource = function() {
     }
     pop.find('.post-comment').attr('data-grid',grid_pos);
   });
+}
+
+function set_winner(){
+  var winner_value = 0;
+  var winner=[];
+  var message = "The winner are: ";
+  $('*[class^="column_sum_"]').each(function(){
+    winner.push($(this).attr('class'));
+    if(parseInt($(this).text()) >= winner_value){
+      winner_value = parseInt($(this).text());
+    }
+  });
+  $('*[class^="column_sum_"]').each(function(){
+    if(parseInt($(this).text()) < parseInt(winner_value)){
+      winner.splice( $.inArray($(this).attr('class'), winner), 1 );
+    }
+  });
+  $.each(winner, function(index, value){
+    $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').css('color','#c7254e');
+    if(winner.length==1){
+      message = "The winner is: " + $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text()+ " with total points of "+ $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').last().text();
+    }else{
+      message += $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text() + " / ";
+    }
+  });
+  $('.winner_declaration').text(message)
 }

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
   post 'create_issue' => 'issues#create_issue'
   get 'issues/:id' => 'issues#get_issue'
+  post 'vote/:id' => 'issues#vote'
+  get 'result/:id' => 'issues#result'
   resource :issues
 
   delete 'comment/:id' => 'comment#destroy'

@@ -1,0 +1,375 @@
+<%= javascript_tag do %>
+window.me = '<%= current_user.email %>';
+window.current_issue = '<%= @issue.id %>';
+<% end %>
+<div class="container">
+  <%= render partial: 'partial/header' %>
+  <div class="col-md-12 no-margin-left" style="padding-top:60px;">
+    <div class="ajax-alert alert alert-info" style="display:none;" role="alert">
+      <p></p>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="content row">    
+      <div class="col-md-12">
+        <div class="bs-callout bs-callout-info"> 
+          <h4><%= @issue.title %> </h4>
+          <p><%= @issue.desc %> </p> 
+          <p><h3><code class="winner_declaration"></code></h3></p>
+        </div>
+        <div class="bs-callout bs-callout-info"> 
+          <h4>The aggregate voting table as calculated from <code><%= @votes_hash.length %></code> contributors including you:</h4><h5></h5>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th> Criterion / Weight</th>
+                <% sn=0 %>
+                <% n=0 %>
+                <% @issue[:idea].each do |idea| %>
+                <th><%= idea %></th>   
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% @issue_attr.each do |criterion| %>
+              <% n+=1 %>
+              <tr>                            
+                <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>"><%= criterion.title %> / <%= criterion.weight %> </code></th>
+                <% @issue[:idea].each do |idea| %>
+                <% sn+=1
+                counter = sn%@issue[:idea].size
+                if counter==0
+                counter = @issue[:idea].size
+                end %>
+                <td>
+                  <div class="col-md-9 vote_cast vote_<%= counter %>">
+                    <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= (@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) %>" >
+                  </div>
+                <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
+              </td>                
+              <% end %>
+            </tr>
+            <% end %>
+            <tr>
+              <th>Total</th>
+              <% sn=0 %>
+              <% @issue[:idea].each do |idea| %>
+              <% sn+=1
+              sum = sn%@issue[:idea].size
+              if sum==0
+              sum = @issue[:idea].size
+              end %>
+              <th class="column_sum_<%= sum %>">X</th>               
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>      
+  </div>
+  <!-- votes of all users  -->
+  
+  <!-- votes of all users end here -->
+</div>
+<!-- comment starts here -->
+<% if @comments.length > 0 %>
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Discussion </h3>
+  </div>
+</div>
+
+<% current_section = @comments.first.grid %> 
+<!-- creation of first modal popup -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= @comments.first.grid %>" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= @comments.first.grid %></code></h4>
+      </div>
+      <div class="modal-body">
+        <!-- create modal popup for each next comment available -->
+        <%@comments.each do |comment|
+        if comment.grid==current_section %>
+
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <% else %>
+        <% current_section = comment.grid %>
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= current_section %>" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= current_section %></code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <% end %>
+        <!-- closing of the first default modal popup -->
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal popup dynamic generator ends here -->
+
+
+<% current_comment = @comments.first.grid %> 
+<!-- creation of first comment box under discussion -->
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-10">
+            <div class="comment-box-name">
+              <code><strong><%= @comments.first.grid %></strong></code>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <!-- create discussion box for each next comment available -->
+        <%@comments.each do |comment|
+        if comment.grid==current_comment %>
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"><%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <% else %>
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="<%= current_comment %>" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% current_comment = comment.grid %>
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-10">
+            <div class="comment-box-name">
+              <code><strong><%= current_comment %></strong></code>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"><%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <% end %>
+
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="<%= current_comment %>" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<!-- closing of the first default comment popup -->
+<!-- comment discussion dynamic generator ends here -->
+</div>
+<!-- <%= render partial: 'partial/footer' %> -->
+<!-- below are the templates for modal comment popup and comments under discussion heading -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_template" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: </code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $( document ).ready(function() {
+
+  });
+</script>

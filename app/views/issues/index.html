@@ -56,12 +56,13 @@
           <% if @issues || @issues.count > 0%>
           <% sn=0 %>
             <% @issues.each do |issue| %>
+            <% pp issue %>
                 <% sn+=1 %>
                 
                 <tr>
                     <td><%=  sn %>.</td>
                     <td><%= issue.title %></td>
-                    <td><%= issue.desc %> </td>
+                    <td><%= issue.desc %></td>
                     <td>
                       <% if issue.status==true %>
                         Open
@@ -70,14 +71,16 @@
                       <% end %>
                     </td>
                     <td>
-                    
-                      <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success button_to_link">Edit</button>
-                      <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_vote">Vote</button></a>
+                    <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_vote">Vote</button></a>    
+
+                      <% if issue.creator.to_s == current_user.id.to_s %>                
+                      <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success button_to_link">Edit</button>                      
                       <%= button_to 'Remove', issues_path(issue),
                       method: :delete,
                       class: :"btn btn-danger",
                       type: :"button",
                       data: { confirm: 'Are you sure?' } %>
+                      <% end %>
                     </td>
                 </tr>
               <% end %>
