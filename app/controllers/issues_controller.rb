@@ -19,7 +19,6 @@ class IssuesController < ApplicationController
     		votes.each do | vote |
     			@votes_hash[vote.column][vote.row] = vote
     		end
-    		pp @votes_hash
 	    	@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
 	    	render :show, :issue => @issue, :issue_attr => @issue_attr, :comments => @comments, :votes => @votes_hash
 	 	}
@@ -111,6 +110,10 @@ class IssuesController < ApplicationController
 			else
 				@aggregate_hash[vote.column.to_s][vote.row.to_s] = vote[:value]
 			end
+		end
+		pp @votes_hash
+		@votes_hash.each do | key, value |
+			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
     	@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
   	end

@@ -164,15 +164,16 @@ var readyDataSource = function() {
     });
 
   $( ".vote_cast input" ).focusout(function() {
+    parent_table = $(this).closest('table');
     count = $(this).attr('data-counter');
     var totalPoints = 0;
 
     $(this).closest('td').find('.vote_point').text($(this)[0].value*$(this).attr('data-weight'));
-    $('.vote_'+count).each(function(){
+    $(parent_table).find('.vote_'+count).each(function(){
         totalPoints = parseFloat($(this).parent().find('.vote_point').text()) + totalPoints;
     });
     if(totalPoints>0)
-    $('.column_sum_'+count).text(totalPoints);
+    $(parent_table).find('.column_sum_'+count).text(totalPoints);
   });
 
   $( ".vote_cast" ).dblclick(function() {
@@ -193,24 +194,49 @@ function set_winner(){
   var winner_value = 0;
   var winner=[];
   var message = "The winner are: ";
-  $('*[class^="column_sum_"]').each(function(){
+  $('.bs-callout-info *[class^="column_sum_"]').each(function(){
     winner.push($(this).attr('class'));
     if(parseInt($(this).text()) >= winner_value){
       winner_value = parseInt($(this).text());
     }
   });
-  $('*[class^="column_sum_"]').each(function(){
+  $('.bs-callout-info *[class^="column_sum_"]').each(function(){
     if(parseInt($(this).text()) < parseInt(winner_value)){
       winner.splice( $.inArray($(this).attr('class'), winner), 1 );
     }
   });
+
+  
   $.each(winner, function(index, value){
-    $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').css('color','#c7254e');
+    $('.bs-callout-info  table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').css('color','#c7254e');
     if(winner.length==1){
-      message = "The winner is: " + $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text()+ " with total points of "+ $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').last().text();
+      message = "The winner is: " + $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text()+ " with total points of "+ $('.bs-callout-info table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').last().text();
     }else{
-      message += $('table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text() + " / ";
+      message += $('.bs-callout-info table tr th:nth-child('+(parseInt(value.split('_')[2])+1)+')').first().text() + " / ";
     }
   });
   $('.winner_declaration').text(message)
+
+  table_counter = 0;
+  $('.individual table').each(function(){
+    table_counter += 1;
+    winner_value = 0;
+    winner=[];
+    $(this).find('*[class^="column_sum_"]').each(function(){
+      winner.push($(this).attr('class'));
+      if(parseInt($(this).text()) >= winner_value){
+        winner_value = parseInt($(this).text());
+      }
+    });
+    $(this).find('*[class^="column_sum_"]').each(function(){
+      if(parseInt($(this).text()) < parseInt(winner_value)){
+        winner.splice( $.inArray($(this).attr('class'), winner), 1 );
+      }
+    });
+      
+    $.each(winner, function(index, value){
+      var high = parseInt(value.split('_')[2])+1;
+      $('.tbl_'+table_counter+' tr th:nth-child('+high+')').css('color','#c7254e'); 
+    });
+  });
 }

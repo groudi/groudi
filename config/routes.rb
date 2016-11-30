@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get 'issues/:id' => 'issues#get_issue'
   post 'vote/:id' => 'issues#vote'
   get 'result/:id' => 'issues#result'
+  get 'analytics/:id' => 'analytics#show'
   resource :issues
 
   delete 'comment/:id' => 'comment#destroy'

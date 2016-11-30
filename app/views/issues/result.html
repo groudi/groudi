@@ -69,10 +69,14 @@ window.current_issue = '<%= @issue.id %>';
     </div>      
   </div>
   <!-- votes of all users  -->
-  <div class="content row">  
+  <div class="content row individual"> 
+  <div class="col-md-12"> <h3>Contribution of individual users are: </h3></div> 
+  <% tc =0 %>
   <% @votes_hash.each do |user_vote| %>  
+    <% tc +=1 %>
       <div class="col-md-6">
-          <table class="table table-bordered">
+       <h5><code><%= user_vote[1]["email"] %></code></h5>
+          <table class="table table-bordered tbl_<%= tc %>">
             <thead>
               <tr>
                 <th></th>
@@ -84,7 +88,7 @@ window.current_issue = '<%= @issue.id %>';
                 if counter==0
                 counter = @issue[:idea].size
                 end %>
-                <th>X_<%= counter %></th>   
+                <th  title="<%= idea %>">X_<%= counter %></th>   
                 <% end %>
               </tr>
             </thead>
@@ -92,7 +96,7 @@ window.current_issue = '<%= @issue.id %>';
               <% @issue_attr.each do |criterion| %>
               <% n+=1 %>
               <tr>                            
-                <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
                 <% @issue[:idea].each do |idea| %>
                 <% sn+=1
                 counter = sn%@issue[:idea].size
@@ -100,9 +104,10 @@ window.current_issue = '<%= @issue.id %>';
                 counter = @issue[:idea].size
                 end %>
                 <td>
-                  <!-- <div class="col-md-9 vote_cast vote_<%= counter %>">
-                    <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= (idea[counter][n])%>" >
-                  </div> -->
+                  <div class="col-md-6 vote_cast vote_<%= counter %>">
+                    <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%=user_vote[1][counter][n].value %>" >
+                  </div>
+                  <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
               </td>                
               <% end %>
             </tr>
@@ -116,11 +121,13 @@ window.current_issue = '<%= @issue.id %>';
               if sum==0
               sum = @issue[:idea].size
               end %>
+              
               <th class="column_sum_<%= sum %>">X</th>               
               <% end %>
             </tr>
           </tbody>
         </table>
+        
     </div>
     <% end %>      
   </div>
