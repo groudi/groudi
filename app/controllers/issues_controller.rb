@@ -112,9 +112,6 @@ class IssuesController < ApplicationController
 				@aggregate_hash[vote.column.to_s][vote.row.to_s] = vote[:value]
 			end
 		end
-		pp @votes_hash
-		pp "========================================"
-		pp @aggregate_hash
     	@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
   	end
 

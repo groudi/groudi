@@ -69,7 +69,61 @@ window.current_issue = '<%= @issue.id %>';
     </div>      
   </div>
   <!-- votes of all users  -->
-  
+  <div class="content row">  
+  <% @votes_hash.each do |user_vote| %>  
+      <div class="col-md-6">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th></th>
+                <% sn=0 %>
+                <% n=0 %>
+                <% @issue[:idea].each do |idea| %>
+                <% sn+=1
+                counter = sn%@issue[:idea].size
+                if counter==0
+                counter = @issue[:idea].size
+                end %>
+                <th>X_<%= counter %></th>   
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% @issue_attr.each do |criterion| %>
+              <% n+=1 %>
+              <tr>                            
+                <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                <% @issue[:idea].each do |idea| %>
+                <% sn+=1
+                counter = sn%@issue[:idea].size
+                if counter==0
+                counter = @issue[:idea].size
+                end %>
+                <td>
+                  <!-- <div class="col-md-9 vote_cast vote_<%= counter %>">
+                    <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= (idea[counter][n])%>" >
+                  </div> -->
+              </td>                
+              <% end %>
+            </tr>
+            <% end %>
+            <tr>
+              <th>Total</th>
+              <% sn=0 %>
+              <% @issue[:idea].each do |idea| %>
+              <% sn+=1
+              sum = sn%@issue[:idea].size
+              if sum==0
+              sum = @issue[:idea].size
+              end %>
+              <th class="column_sum_<%= sum %>">X</th>               
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <% end %>      
+  </div>
   <!-- votes of all users end here -->
 </div>
 <!-- comment starts here -->

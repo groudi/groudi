@@ -118,7 +118,7 @@ var readyDataSource = function() {
               xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
           },
           success: function(data){
-           $('.modal-title').val('Edit Issue');
+           $('.modal-title').text('Edit Issue');
            $('#issue_topic').val(data.issue.title);
            $('#issue_description').val(data.issue.desc);
            
@@ -134,7 +134,7 @@ var readyDataSource = function() {
                     .removeClass('btn-success').addClass('btn-danger')
                     .html('<span class="glyphicon glyphicon-minus"></span>');
               }
-              controlForm.find('.entry(:last) .btn-add-issue')
+              $('.idea_block .entry:last-child .btn-remove')
                     .addClass('btn-add-issue').removeClass('btn-remove')
                     .addClass('btn-success').removeClass('btn-danger')
                     .html('<span class="glyphicon glyphicon-plus"></span>');
@@ -144,10 +144,17 @@ var readyDataSource = function() {
            }else{
                 $('#active').prop("checked", false);
            }
+           $('input.c_title').val(data.issue_attr[0].title);
+           $('.c_weight').val(data.issue_attr[0].weight);
+           $('.c_desc').val(data.issue_attr[0].desc);
            for(i=1; i<data.issue_attr.length; i++){
-
-           }
-            },
+            console.log(data.issue_attr[i].title);
+            $('.attribute_block .btn-add-attribute').trigger('click');
+            $('.issue_attribute .entry:last .c_title').val(data.issue_attr[i].title);
+            $('.issue_attribute .entry:last .c_desc').val(data.issue_attr[i].desc);
+            $('.issue_attribute .entry:last .c_weight').val(data.issue_attr[i].weight);
+          }
+         },
           error: function(xhr, status, response) {
             alert("Oops, there was an error while trying to get the details!");
             console.log(response);
