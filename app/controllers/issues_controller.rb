@@ -98,11 +98,9 @@ class IssuesController < ApplicationController
 					:user_id => authenticate_user![:id],
 					:issue_id => params[:id]
 					}
-					pp vote_hash
-					batch << Vote.new(vote_hash)
+					Vote.create(vote_hash)
 				end
   			end
-	  		Vote.import batch
   		end
   		redirect_to action: "get_issue"
   	end
@@ -122,7 +120,6 @@ class IssuesController < ApplicationController
 				@aggregate_hash[vote.column.to_s][vote.row.to_s] = vote[:value]
 			end
 		end
-		pp @votes_hash
 		@votes_hash.each do | key, value |
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
