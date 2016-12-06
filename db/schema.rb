@@ -13,32 +13,35 @@
 
 ActiveRecord::Schema.define(version: 20161124114730) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "comments", force: :cascade do |t|
     t.integer  "issue_id"
     t.text     "comment"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "user_id"
     t.string   "grid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "issues", force: :cascade do |t|
     t.string   "title"
     t.text     "desc"
+    t.text     "idea"
     t.boolean  "status"
     t.text     "creator"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "idea"
   end
 
   create_table "standards", force: :cascade do |t|
     t.string   "title"
+    t.integer  "weight"
+    t.integer  "issue_id"
     t.text     "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "weight"
-    t.integer  "issue_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -56,8 +59,8 @@ ActiveRecord::Schema.define(version: 20161124114730) do
     t.datetime "updated_at",                          null: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "votes", force: :cascade do |t|
     t.integer  "issue_id"
