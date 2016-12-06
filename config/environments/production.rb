@@ -79,16 +79,15 @@ Rails.application.configure do
 
     # ActionMailer Config
   # config.action_mailer.delivery_method = :letter_opener
-
- config.action_mailer.default_url_options = { :host => 'https://groudi.herokuapp.com/' }
-  ActionMailer::Base.smtp_settings = {
-                    :address        => "smtp.gmail.com",
-                    :port           => 587,
-                    :authentication => :plain,
-                    :user_name      => "groudi.startup@gmail.com",
-                    :password       => "startup2",
-                    :openssl_verify_mode  => 'none'
-  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+     address: 'smtp.gmail.com',
+     port: 587,
+     domain: 'https://groudi.herokuapp.com/',
+     user_name: 'gruodi.startup@gmail.com',
+     password: 'startup2',
+     authentication: 'plain',
+     enable_starttls_auto: true }
 
 # Send email in development mode?
 config.action_mailer.perform_deliveries = true
