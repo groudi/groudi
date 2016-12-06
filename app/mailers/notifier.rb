@@ -7,7 +7,7 @@ class Notifier < ApplicationMailer
 	    @url  = 'http://localhost:3000/issues/'+id
 	    success = mail(to: @user,
          subject: 'New discussion topic') do |format|
-	      # format.html { render 'invitation_email' }
+	      format.html { render 'invitation_email' }
 	    end
 	    return success
 	  end
