@@ -20,6 +20,7 @@
         <div class="bs-callout bs-callout-info"> 
           <h4>Your Contribution</h4><h5>Total <code>12</code> contributors including you</h5>
           <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -44,7 +45,11 @@
                   end %>
                   <td>
                     <div class="col-md-9 vote_cast vote_<%= counter %>">
-                      <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" name='vote_cast[<%= idea %>][]' required>
+                      <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" value="<%= @votes_hash[counter][n][:value].presence %>" name='vote_cast[<%= counter %>][]' required>
+                    </div>
+                    <% if @votes_hash.length>1 %>
+                    <input type="hidden" value="<%= @votes_hash[counter][n][:value].presence %>" name='edit_vote_cast[<%= counter %>][]' >
+                    <% end %>
                     </div>
                     <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
                   </td>                
@@ -72,125 +77,16 @@
     </div>
   </div>
   <!-- comment starts here -->
+  <% if @comments.length > 0 %>
   <div class="row">
     <div class="col-sm-12">
       <h3>Discussion </h3>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-sm-10">
-              <div class="comment-box-name">
-                <code><strong>Box plot: Population / Hannover</strong></code>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-2">
-              <div class="thumbnail">
-                <%= image_tag "avatar.png" %>
-              </div>
-            </div>
-            <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
-              </div>
-              <div class="comment-main-thread">
-              <div>
-                I will give high value to Hannover. I would like to suggest you guys too.
-                Lets all make the Hannover winner once again because of these issues ....
-                </div>
-                <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2 reply-comment">
-              <div class="thumbnail">
-                <%= image_tag "avatar.png" %>
-              </div>
-            </div>
-
-            <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong><%= current_user.email %></strong>
-              </div>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="your response">
-                <span class="input-group-btn">
-                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-sm-10">
-              <div class="comment-box-name">
-                <code><strong>Box plot: Population / Hannover</strong></code>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-2">
-              <div class="thumbnail">
-                <%= image_tag "avatar.png" %>
-              </div>
-            </div>
-            <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
-              </div>
-              <div class="comment-main-thread">
-              <div>
-                I will give high value to Hannover. I would like to suggest you guys too.
-                Lets all make the Hannover winner once again because of these issues ....
-                </div>
-                <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2 reply-comment">
-              <div class="thumbnail">
-                <%= image_tag "avatar.png" %>
-              </div>
-            </div>
-
-            <div class="col-sm-10">
-              <div class="comment-user-name">
-                <strong><%= current_user.email %></strong>
-              </div>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="your response">
-                <span class="input-group-btn">
-                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ends here comment -->
-</div>
-<!-- <%= render partial: 'partial/footer' %> -->
-<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_Cost_Magdeburg" role="dialog" tabindex="-1">
+  
+  <% current_section = @comments.first.grid %> 
+  <!-- creation of first modal popup -->
+  <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= @comments.first.grid %>" role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -198,9 +94,13 @@
           <span aria-hidden="true">×</span>
           <span class="sr-only">Close</span>
         </button>
-        <h4 class="modal-title" id="label-title"><code>Box Plot: Cost / Magdeburg</code></h4>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= @comments.first.grid %></code></h4>
       </div>
       <div class="modal-body">
+      <!-- create modal popup for each next comment available -->
+  <%@comments.each do |comment|
+    if comment.grid==current_section %>
+      
         <div class="row">
           <div class="col-sm-2">
             <div class="thumbnail">
@@ -209,40 +109,234 @@
           </div>
           <div class="col-sm-10">
             <div class="comment-user-name">
-              <strong>someone</strong> <span class="text-muted">commented 3 days ago</span>
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
             </div>
             <div class="comment-main-thread">
             <div>
-              I will give high value to Hannover. I would like to suggest you guys too.
-              Lets all make the Hannover winner once again because of these issues ....
+              <%= comment.comment %>
               </div>
-              <div><span class="glyphicon glyphicon-trash trash-red" aria-hidden="true"></span></div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
             </div>
           </div>
         </div>
+        
+    <% else %>
+      <% current_section = comment.grid %>
         <div class="row">
-          <div class="col-sm-2 reply-comment">
-            <div class="thumbnail">
-              <%= image_tag "avatar.png" %>
+            <div class="col-sm-2 reply-comment">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
             </div>
-          </div>
 
-          <div class="col-sm-10">
-            <div class="comment-user-name">
-              <strong><%= current_user.email %></strong>
-            </div>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="your response">
-              <span class="input-group-btn">
-                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
-              </span>
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= current_user.email %></strong>
+              </div>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="your response">
+                <span class="input-group-btn">
+                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= current_section %>" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= current_section %></code></h4>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+            <div>
+              <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+    <% end %>
+    
+  <% end %>
+  <!-- closing of the first default modal popup -->
+  <div class="row">
+            <div class="col-sm-2 reply-comment">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= current_user.email %></strong>
+              </div>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="your response">
+                <span class="input-group-btn">
+                  <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal popup dynamic generator ends here -->
+
+
+<% current_comment = @comments.first.grid %> 
+  <!-- creation of first comment box under discussion -->
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="comment-box-name">
+                <code><strong><%= @comments.first.grid %></strong></code>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+      <!-- create discussion box for each next comment available -->
+  <%@comments.each do |comment|
+    if comment.grid==current_comment %>
+      <div class="row">
+            <div class="col-sm-2">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= comment.user_id %></strong> <span class="text-muted"><%= time_ago_in_words(comment.updated_at) %> ago</span>
+              </div>
+              <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+                </div>
+                <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+              </div>
+            </div>
+          </div>
+        
+    <% else %>
+        <div class="row">
+            <div class="col-sm-2 reply-comment">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= current_user.email %></strong>
+              </div>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="your response">
+                <span class="input-group-btn">
+                  <button class="btn btn-default post-comment" data-grid="<%= current_comment %>" type="button">Post</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% current_comment = comment.grid %>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="comment-box-name">
+                <code><strong><%= current_comment %></strong></code>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-2">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= comment.user_id %></strong> <span class="text-muted"><%= time_ago_in_words(comment.updated_at) %> ago</span>
+              </div>
+              <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+                </div>
+                <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+              </div>
+            </div>
+          </div>
+    <% end %>
+    
+  <% end %>
+ 
+  <div class="row">
+            <div class="col-sm-2 reply-comment">
+              <div class="thumbnail">
+                <%= image_tag "avatar.png" %>
+              </div>
+            </div>
+
+            <div class="col-sm-10">
+              <div class="comment-user-name">
+                <strong><%= current_user.email %></strong>
+              </div>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="your response">
+                <span class="input-group-btn">
+                  <button class="btn btn-default post-comment" data-grid="<%= current_comment %>" type="button">Post</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <% end %>
+  <!-- closing of the first default comment popup -->
+  <!-- comment discussion dynamic generator ends here -->
 </div>
+<!-- <%= render partial: 'partial/footer' %> -->
 <!-- below are the templates for modal comment popup and comments under discussion heading -->
 <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_template" role="dialog" tabindex="-1">
   <div class="modal-dialog">
@@ -270,57 +364,6 @@
               <input type="text" class="form-control" placeholder="your response">
               <span class="input-group-btn">
                 <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row template_com_dis">
-  <div class="col-sm-8">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-sm-10">
-            <div class="comment-box-name">
-              <code><strong>Box plot: </strong></code>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-sm-2">
-            <div class="thumbnail">
-              <%= image_tag "avatar.png" %>
-            </div>
-          </div>
-          <div class="col-sm-10">
-            <div class="comment-user-name">
-              <strong><%= current_user.email %></strong> <span class="text-muted">commented 3 days ago</span>
-            </div>
-            <div class="comment-main-thread">
-              .....
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-2 reply-comment">
-            <div class="thumbnail">
-              <%= image_tag "avatar.png" %>
-            </div>
-          </div>
-
-          <div class="col-sm-10">
-            <div class="comment-user-name">
-              <strong><%= current_user.email %></strong>
-            </div>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="your response">
-              <span class="input-group-btn">
-                <button class="btn btn-default post-comment" data-dismiss="modal" data-grid="" type="button">Post</button>
               </span>
             </div>
           </div>
