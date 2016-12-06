@@ -12,13 +12,6 @@
           <button class="btn btn-primary add" data-target="#addEditIssues" data-toggle="modal">
             + Discussion
           </button>
-       <form action = "/issues" method="GET" class="filter-form" role="search">
-        <span class="input-group add-on">
-          <input class="" name="query" placeholder="Search" value="<%= @searched ? @searched : '' %>" type="text">
-          <input class="btn" style="display: none;" name="submit" type="submit" value="Search">
-          <%= image_tag "clear.png", :class => "clear-search", :alt => "X" %>
-        </span>
-      </form>
       </div>   
       <% if !@issues || @issues.count <= 0%>
 
@@ -46,10 +39,10 @@
           <thead>
             <tr>
               <th width="5%">Sn.</th>
-              <th width="30%">Topic</th>
-              <th width="30%">Description</th>
-              <th width="5%">Status</th>
-              <th width="30%">Action</th>
+              <th width="20%">Topic</th>
+              <th width="35%">Description</th>
+              <th width="7%">Status</th>
+              <th width="33%">Action</th>
             </tr>
           </thead>
           <tbody class="content_tbody">
@@ -62,7 +55,11 @@
                 <tr>
                     <td><%=  sn %>.</td>
                     <td><%= issue.title %></td>
-                    <td><%= issue.desc %></td>
+                    <td><% if issue.desc.length > 150 %>
+                        <%= issue.desc.scan(/.{150}/)[0]+ "..." %>
+                      <% else %>
+                      <%= issue.desc %>
+                     <% end %></td>
                     <td>
                       <% if issue.status==true %>
                         Open
@@ -74,6 +71,7 @@
                         </td>
                         <td>
                         <a href="/discussion/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary button_to_vote float_left">View</button></a> 
+                        <a href="/result/<%= issue.id %>" class="float_left"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary">Result</button></a> 
                       <% end %>  
 
                       <% if issue.creator.to_s == current_user.id.to_s %>                
