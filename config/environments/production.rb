@@ -79,16 +79,16 @@ Rails.application.configure do
 
     # ActionMailer Config
   # config.action_mailer.delivery_method = :letter_opener
-config.action_mailer.delivery_method = :smtp
+# config.action_mailer.delivery_method = :smtp
 # SMTP settings for gmail
-config.action_mailer.smtp_settings = {
- :address              => "smtp.gmail.com",
- :port                 => 587,
- :user_name            => ENV['gruodi.startup@gmail.com'],
- :password             => ENV['startup2'],
- :authentication       => "plain",
-:enable_starttls_auto => true
-}
+ActionMailer::Base.smtp_settings = {
+                    :address        => "smtp.gmail.com",
+                    :port           => 587,
+                    :authentication => :plain,
+                    :user_name      => "groudi.startup@gmail.com",
+                    :password       => "startup2",
+                    :openssl_verify_mode  => 'none'
+  }
 # Send email in development mode?
 config.action_mailer.perform_deliveries = true
 end
