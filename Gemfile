@@ -45,6 +45,7 @@ group :production do
   gem "pg"
   gem "rails_12factor"
   gem "ruby"
+  gem 'prototype-rails'
 
 end
 group :development do
