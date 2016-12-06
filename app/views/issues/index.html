@@ -9,8 +9,8 @@
   <div class="box">
     <div class="content row">  
       <div class="col-md-12 text-right">        
-          <button class="btn btn-primary" data-target="#addEditIssues" data-toggle="modal">
-            + Issue
+          <button class="btn btn-primary add" data-target="#addEditIssues" data-toggle="modal">
+            + Discussion
           </button>
        <form action = "/issues" method="GET" class="filter-form" role="search">
         <span class="input-group add-on">
@@ -30,7 +30,7 @@
           </span>
           <% else %>
           <span>
-          <%= t :no_records, :resource_name=> "Available Issues" %>
+          <%= t :no_records, :resource_name=> "Available Discussions" %>
           </span>
           <a href="#" class="btn-link" data-target="#addEditIssues" data-toggle="modal">
             Create New
@@ -45,11 +45,11 @@
         <table class="table table-striped">        
           <thead>
             <tr>
-              <th>Sn.</th>
-              <th>Topic</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th width="5%">Sn.</th>
+              <th width="30%">Topic</th>
+              <th width="30%">Description</th>
+              <th width="5%">Status</th>
+              <th width="30%">Action</th>
             </tr>
           </thead>
           <tbody class="content_tbody">
@@ -66,15 +66,19 @@
                     <td>
                       <% if issue.status==true %>
                         Open
+                        </td>
+                        <td>
+                        <a href="/discussion/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_vote float_left">Vote</button></a> 
                       <% else %>
                         Closed
-                      <% end %>
-                    </td>
-                    <td>
-                    <a href="/issues/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-success button_to_vote">Vote</button></a>    
+                        </td>
+                        <td>
+                        <a href="/discussion/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary button_to_vote float_left">View</button></a> 
+                      <% end %>  
 
                       <% if issue.creator.to_s == current_user.id.to_s %>                
-                      <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success button_to_link">Edit</button>                      
+                      <button type="button" data-id="<%= issue.id %>" data-target="#addEditIssues" data-toggle="modal" class="btn btn-success float_left button_to_link">Edit</button>                      
+                      <button type="button" data-id="<%= issue.id %>" data-target="#inviteUsers" data-toggle="modal" class="btn btn-success float_left invite_button">Invite</button>                      
                       <%= button_to 'Remove', issues_path(issue),
                       method: :delete,
                       class: :"btn btn-danger",
@@ -92,7 +96,24 @@
   </div>
 </div>
 <!-- <%= render partial: 'partial/footer' %> -->
-
+<!-- Modal -->
+<div class="modal fade" id="inviteUsers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Invite Contributors</h4>
+      </div>
+      <div class="modal-body">
+        <input class="form-control invite_users" data-role="tagsinput">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary invite">Invite</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="addEditIssues" role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -102,7 +123,7 @@
       <span aria-hidden="true">×</span>
       <span class="sr-only">Close</span>
     </button>
-    <h4 class="modal-title" id="label-title">Add Issue</h4>
+    <h4 class="modal-title" id="label-title">Add Discussion</h4>
   </div>
   <div class="modal-body">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
@@ -170,7 +191,7 @@
           <input class="form-control  c_desc" type="text" id="attr_desc" name="attr_desc[]" placeholder="about attribute"></input>
         </div>
     </div>
-      </div><!-- form-add end -->
+      </div>
     </div>    
 
     <div class="form-group">
@@ -186,3 +207,9 @@
 </div>
 </div>
 </div>
+<script>
+  $('.invite_users').tagsinput({
+  allowDuplicates: false
+});
+</script>
+

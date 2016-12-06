@@ -53,6 +53,17 @@ class IssuesController < ApplicationController
   	end
 
   	def update_issue
+  		data_source_hash = {
+			:title => params[:issue_topic],
+			:desc => params[:issue_desc],
+			:status => params[:issue_status],
+			:idea => params[:issue_idea],
+			:creator => authenticate_user![:id]
+		}
+		issue_detail = Issue.update(params[:id],data_source_hash)
+		issue_detail.save
+
+		redirect_to action: "index"
   	end
 
   	def destroy
@@ -116,6 +127,18 @@ class IssuesController < ApplicationController
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
     	@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
+  	end
+
+  	def invite
+  		emails = params[:invited].split(",")
+  		success = []
+  		emails.each do | email |
+  			success = Notifier.invitation_email(email, params[:id]).deliver_now
+		end
+
+		respond_to do |format|
+	    	format.json { render :json => {:message => "Email notification sent to valid emails."}}
+	  	end
   	end
 
 end

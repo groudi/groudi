@@ -1,0 +1,212 @@
+<%= javascript_tag do %>
+window.analysis_msg = "";
+window.me = '<%= current_user.email %>';
+window.current_issue = '<%= @issue.id %>';
+<% end %>
+<div class="container">
+  <%= render partial: 'partial/header' %>
+  <div class="col-md-12 no-margin-left" style="padding-top:60px;">
+    <div class="ajax-alert alert alert-info" style="display:none;" role="alert">
+      <p></p>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="content row">    
+      <div class="col-md-12">
+        <div class="bs-callout bs-callout-info"> 
+          <h4><%= @issue.title %> </h4>
+          <p><%= @issue.desc %> </p> 
+        </div>
+      </div>      
+    </div>
+    <div class="content row">    
+      <div class="col-md-12">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#standard_deviation" aria-controls="standard_deviation" role="tab" data-toggle="tab">Standard Deviation</a></li>
+          <li role="presentation"><a href="#variance" aria-controls="variance" role="tab" data-toggle="tab">Variance</a></li>
+          <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Table Statistics</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="standard_deviation">
+            <div class="content row individual"> 
+              <div class="col-md-12"> <h3>Deviation from final result for each users are: </h3>
+                <p>Note: Values closer to zero are desirable</p></div> 
+                <% tc =0 %>
+                <% @votes_hash.each do |user_vote| %>  
+                <% tc +=1 %>
+                <div class="col-md-6">
+                 <h5><code><%= user_vote[1]["email"] %></code></h5>
+                 <table class="table table-bordered tbl_<%= tc %>">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <% sn=0 %>
+                      <% n=0 %>
+                      <% @issue[:idea].each do |idea| %>
+                      <% sn+=1
+                      counter = sn%@issue[:idea].size
+                      if counter==0
+                      counter = @issue[:idea].size
+                      end %>
+                      <th  title="<%= idea %>">X_<%= counter %></th>   
+                      <% end %>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @issue_attr.each do |criterion| %>
+                    <% n+=1 %>
+                    <tr>                            
+                      <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                      <% @issue[:idea].each do |idea| %>
+                      <% sn+=1
+                      counter = sn%@issue[:idea].size
+                      if counter==0
+                      counter = @issue[:idea].size
+                      end
+                      variation = ((@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) - user_vote[1][counter][n].value)
+                      %>
+                      <% if variation > 1.5 || variation < -1.5 %>
+                      <%= javascript_tag do %>
+                      analysis_msg += ("<code><%= user_vote[1]['email']  %></code> has highly conflicting prespective about <code><%= idea  %> / <%= criterion.title  %></code> with the deviation of <code><%= variation  %></code> <br>");
+                      <% end %>
+                      <% end %>
+
+                      <td>
+                        <div class="col-md-6 vote_cast vote_<%= counter %>">
+                          <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= variation %>" >
+                        </div>
+                        <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
+                      </td>                
+                      <% end %>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+
+              </div>
+              <% end %>      
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Analysis of the results:</h4>
+                <div class="deviation_msg"></div>
+              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="variance">
+            <div class="content row individual"> 
+              <div class="col-md-12"> <h3>Variance of voting result matrix for each users are: </h3>
+                <p>Note: Smaller values are desirable. (Max value possible: 16)</p></div> 
+                <% tc =0 %>
+                <% @votes_hash.each do |user_vote| %>  
+                <% tc +=1 %>
+                <div class="col-md-6">
+                 <h5><code><%= user_vote[1]["email"] %></code></h5>
+                 <table class="table table-bordered tbl_<%= tc %>">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <% sn=0 %>
+                      <% n=0 %>
+                      <% @issue[:idea].each do |idea| %>
+                      <% sn+=1
+                      counter = sn%@issue[:idea].size
+                      if counter==0
+                      counter = @issue[:idea].size
+                      end %>
+                      <th  title="<%= idea %>">X_<%= counter %></th>   
+                      <% end %>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @issue_attr.each do |criterion| %>
+                    <% n+=1 %>
+                    <tr>                            
+                      <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                      <% @issue[:idea].each do |idea| %>
+                      <% sn+=1
+                      counter = sn%@issue[:idea].size
+                      if counter==0
+                      counter = @issue[:idea].size
+                      end %>
+                      <td>
+                        <div class="col-md-6 vote_cast vote_<%= counter %>">
+                          <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%=((@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) - user_vote[1][counter][n].value) ** 2 %>" >
+                        </div>
+                        <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
+                      </td>                
+                      <% end %>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+
+              </div>
+              <% end %>      
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="stats">
+            <div class="content row individual"> 
+              <div class="col-md-12"> <h3>The statistics based on the whole ratings given in this discussion topic is as below: </h3>
+              <code>Variance</code>
+              <% if @key_stats[:variance] < 1.1
+                  class_variance = "alert-success"
+                elsif @key_stats[:variance] >= 1.1 && @key_stats[:variance] < 1.6
+                  class_variance = "alert-warning"
+                elsif @key_stats[:variance] >= 1.6
+                  class_variance = "alert-danger"
+               end %>
+              <div class="alert <%= class_variance %>" role="alert">The variance of the overall votings in this issue is <%= @key_stats[:variance] %></div>
+
+              <code>Standard Deviation</code>
+              <% if @key_stats[:standard_deviation] < 1.1
+                  class_sd = "alert-success"
+                elsif @key_stats[:standard_deviation] >= 1.1 && @key_stats[:standard_deviation] < 1.6
+                  class_sd = "alert-warning"
+                elsif @key_stats[:standard_deviation] >= 1.6
+                  class_sd = "alert-danger"
+               end %>
+              <div class="alert <%= class_sd %>" role="alert">The standard deviation of the overall votings in this issue is <%= @key_stats[:standard_deviation] %></div>
+
+              <code>Min / Max</code>
+              <% if @key_stats[:min] ==1 && @key_stats[:max] ==5
+                  class_min = "alert-success"
+                  min_msg = "The users have voted using all the available range from 1-5. "
+                else
+                  class_min = "alert-danger"
+                  min_msg = "Encourage users to vote to the extremities, as low as 1 to as high as 5."
+               end %>
+              <div class="alert <%= class_min %>" role="alert"><%= min_msg %></div>
+
+              <code>Range</code>
+              <% if @key_stats[:range] < 4
+                  class_range = "alert-danger"
+                  msg_range = "Some of available voting options, i.e. from (1, 2, 3, 4, 5) were not used."
+                else
+                  class_range = "alert-success"
+                  msg_range = "All available voting options, i.e. from (1, 2, 3, 4, 5) were used. "
+               end %>
+              <div class="alert <%= class_range %>" role="alert"><%= msg_range %></div>
+
+              <code>Mean / Median / Mode</code>
+              <div class="alert alert-info" role="alert">The mean of the overall voting is <%= @key_stats[:mean] %>, median is <%= @key_stats[:median] %>, mode is <%= @key_stats[:mode] %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
+
+</div>
+<!-- modal popup dynamic generator ends here -->
+<!-- <%= render partial: 'partial/footer' %> -->
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('.deviation_msg').html(analysis_msg);
+  });
+</script>

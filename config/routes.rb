@@ -9,9 +9,11 @@ Rails.application.routes.draw do
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   post 'create_issue' => 'issues#create_issue'
-  get 'issues/:id' => 'issues#get_issue'
+  post 'edit_issue/:id' => 'issues#update_issue'
+  get 'discussion/:id' => 'issues#get_issue'
   post 'vote/:id' => 'issues#vote'
   get 'result/:id' => 'issues#result'
+  post 'invite/:id' => 'issues#invite'
   get 'analytics/:id' => 'analytics#show'
   resource :issues
 

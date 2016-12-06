@@ -30,6 +30,8 @@ GEM
       activemodel (= 4.2.6)
       activesupport (= 4.2.6)
       arel (~> 6.0)
+    activerecord-import (0.16.2)
+      activerecord (>= 3.2)
     activesupport (4.2.6)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -55,6 +57,7 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
     debug_inspector (0.0.2)
+    descriptive_statistics (2.4.0)
     devise (4.2.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -161,10 +164,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   autoprefixer-rails
   bootstrap-sass (~> 3.2.0)
   byebug
   coffee-rails (~> 4.1.0)
+  descriptive_statistics (~> 2.4.0)
   devise
   jbuilder (~> 2.0)
   jquery-rails

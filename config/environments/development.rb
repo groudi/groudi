@@ -36,7 +36,19 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  # ActionMailer Config
+  # config.action_mailer.delivery_method = :letter_opener
+
+ config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  ActionMailer::Base.smtp_settings = {
+                    :address        => "smtp.gmail.com",
+                    :port           => 587,
+                    :authentication => :plain,
+                    :user_name      => "umesh.riverbed@gmail.com",
+                    :password       => "alotab1213",
+                    :openssl_verify_mode  => 'none'
+  }
+
+# Send email in development mode?
+config.action_mailer.perform_deliveries = true
 end

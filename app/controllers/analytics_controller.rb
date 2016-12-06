@@ -1,10 +1,15 @@
 class AnalyticsController < ApplicationController
 	require 'pp'
+	require 'descriptive_statistics'
 	before_action :authenticate_user!
 	def show
 		@issue = Issue.find(params[:id])
 		@issue_attr = Standard.where(issue_id: params[:id])
 		votes = Vote.where(issue_id: params[:id])
+		plain_votes = Vote.where(issue_id: params[:id]).pluck(:value)
+		@key_stats =  plain_votes.descriptive_statistics
+		pp @key_stats
+		pp "=============================================="
 		@votes_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
 		@aggregate_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
 
@@ -16,7 +21,6 @@ class AnalyticsController < ApplicationController
 				@aggregate_hash[vote.column.to_s][vote.row.to_s] = vote[:value]
 			end
 		end
-		pp @votes_hash
 		@votes_hash.each do | key, value |
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end

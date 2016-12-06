@@ -107,21 +107,57 @@ var readyDataSource = function() {
               }
           });
   });
+    $(document).on('click', '.invite_button', function(e){
+        // var input = $( this ).attr('data-id');
+        $('.invite').attr('data-id',$( this ).attr('data-id'));
+    });
+    $(document).on('click', '.invite', function(e){
+        var input = $( this ).attr('data-id');
+        $.ajax({
+          url: '/invite/'+ input,
+          type: 'POST',
+          data: {invited:$('.invite_users').val()},
+          dataType: 'json',
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+          },
+          success: function(data){
+            $('.ajax-alert p').text(data.message);
+            $('.ajax-alert').css("display","block");
+
+            setTimeout(function(){
+              $('.ajax-alert').fadeOut();
+            }, 3000);
+           $('.modal').modal('hide');
+          },
+          error: function(xhr, status, response) {
+            alert("Oops, there was an error while trying to invite the contributors!");
+            console.log(response);
+            }
+        });
+
+    });
+    $(document).on('click', '.add', function(e){
+      $('.modal-title').text('Add Discussion');
+     $('#create-edit-issues-form').attr('action', '/create_issue');
+     $('input.form-control').val('');
+
+    });
 
     $(document).on('click', '.button_to_link', function(e){
         var input = $( this ).attr('data-id');
         $.ajax({
-          url: '/issues/'+ input,
+          url: '/discussion/'+ input,
           type: 'GET',
           dataType: 'json',
           beforeSend: function (xhr) {
               xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
           },
           success: function(data){
-           $('.modal-title').text('Edit Issue');
+           $('.modal-title').text('Edit Discussion');
            $('#issue_topic').val(data.issue.title);
            $('#issue_description').val(data.issue.desc);
-           
+           $('#create-edit-issues-form').attr('action', '/edit_issue/'+ input);
            $('.issue_idea input').val(data.issue.idea[0]);
            if(data.issue.idea.length>1){
               var controlForm = $('.issue_idea .form_add:first'),
