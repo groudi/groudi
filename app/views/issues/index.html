@@ -71,7 +71,7 @@
                         </td>
                         <td>
                         <a href="/discussion/<%= issue.id %>"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary button_to_vote float_left">View</button></a> 
-                        <a href="/result/<%= issue.id %>" class="float_left"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary">Result</button></a> 
+                        <a href="/result/<%= issue.id %>" class="float_left"><button type="button" data-id="<%= issue.id %>" class="btn btn-primary button_to_result">Result</button></a> 
                       <% end %>  
 
                       <% if issue.creator.to_s == current_user.id.to_s %>                

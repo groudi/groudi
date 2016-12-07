@@ -143,7 +143,16 @@ var readyDataSource = function() {
      $('input.form-control').val('');
 
     });
+    $(document).on('click', '.button_to_result', function(e){
+      id = $( this ).attr('data-id');
+      window.location.href = window.location.protocol + "//" + window.location.host + "/result/"+id;
 
+    });
+    $(document).on('click', '.button_to_vote', function(e){
+      id = $( this ).attr('data-id');
+      window.location.href = window.location.protocol + "//" + window.location.host + "/discussion/"+id;
+
+    });
     $(document).on('click', '.button_to_link', function(e){
         var input = $( this ).attr('data-id');
         $.ajax({
