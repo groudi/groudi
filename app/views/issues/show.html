@@ -5,9 +5,14 @@
 <div class="container">
   <%= render partial: 'partial/header' %>
   <div class="col-md-12 no-margin-left" style="padding-top:60px;">
-    <div class="ajax-alert alert alert-info" style="display:none;" role="alert">
-      <p></p>
+  <% if flash[:notice] %>
+    <div class="ajax-alert alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <p>
+        <%= flash[:notice] %>
+      </p>
     </div>
+    <% end %>
   </div>
 
   <div class="box">

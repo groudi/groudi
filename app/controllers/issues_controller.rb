@@ -86,6 +86,7 @@ class IssuesController < ApplicationController
 		  			end
 				end
   			end
+  			flash[:notice] = "You have successfully edited your votes."
   		else
   			# or inserting a new matrix ?
 	  		(1..params[:vote_cast].length).each do |col|
@@ -101,6 +102,7 @@ class IssuesController < ApplicationController
 					Vote.create(vote_hash)
 				end
   			end
+  			flash[:notice] = "You have successfully casted your votes."
   		end
   		redirect_to action: "get_issue"
   	end
