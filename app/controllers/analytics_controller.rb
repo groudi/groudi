@@ -7,8 +7,9 @@ class AnalyticsController < ApplicationController
 		@issue_attr = Standard.where(issue_id: params[:id])
 		votes = Vote.where(issue_id: params[:id])
 		plain_votes = Vote.where(issue_id: params[:id]).pluck(:value)
+		@stars = Like.where(creator: current_user.id).first
 		@key_stats =  plain_votes.descriptive_statistics
-		pp @key_stats
+		pp @stars[:like]
 		pp "=============================================="
 		@votes_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
 		@aggregate_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }

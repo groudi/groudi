@@ -83,6 +83,47 @@
       </div>      
     </div>
   </div>
+  <div class="bs-callout bs-callout-danger" id="callout-glyphicons-dont-mix"> 
+  <h4>Guidelines</h4>
+   
+   
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          What to do in this page?
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+      <ul><li>
+        The matrix table given above is a <code>discision table</code>(your decision) for the discussion undergoing.</li>
+        <li>The first row is the set of available <code>options</code> which are going to be evaluated on the basis of some specific <code>criterion</code>(1st column). </li>
+        <li>Each <code>criterion</code> has a predefined <code>weight</code>.</li>
+        <li>You evaluate the grid and provide a reasonable <code>vote</code> from 1-5.</li>
+        <li>The <code>vote</code> is multiplied with the <code>weight</code> to calcualte the points for that grid. After all the grids are filled, you can see the resulting sum at the bottom.</li>
+        <li> You can <code>comment</code> on each grid by double clicking on the grid input.
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          How to use the voting table?
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <%= image_tag "desc.jpeg" %> 
+      </div>
+    </div>
+  </div>
+</div>
+</div>
   <!-- comment starts here -->
   <% if @comments.length > 0 %>
   <div class="row">

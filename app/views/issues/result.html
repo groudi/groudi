@@ -18,6 +18,11 @@ window.current_issue = '<%= @issue.id %>';
           <p><%= @issue.desc %> </p> 
           <p><h3><code class="winner_declaration"></code></h3></p>
         </div>
+        <div class="alert alert-danger" role="alert">
+          <h4>Risk Detected!<br><br>
+          <div class="float_left" >
+          Go to </div><a href="/analytics/<%= @issue.id %>"><button type="button" class="btn btn-danger float_left">Analytics</button></a>  to see the result analysis and potential risks.</h4>
+        </div>
         <div class="bs-callout bs-callout-info"> 
           <h4>The aggregate voting table as calculated from <code><%= @votes_hash.length %></code> contributors including you:</h4><h5></h5>
           <table class="table table-bordered">
@@ -46,29 +51,29 @@ window.current_issue = '<%= @issue.id %>';
                   <div class="col-md-9 vote_cast vote_<%= counter %>">
                     <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= (@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) %>" >
                   </div>
-                <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
-              </td>                
+                  <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
+                </td>                
+                <% end %>
+              </tr>
               <% end %>
-            </tr>
-            <% end %>
-            <tr>
-              <th>Total</th>
-              <% sn=0 %>
-              <% @issue[:idea].each do |idea| %>
-              <% sn+=1
-              sum = sn%@issue[:idea].size
-              if sum==0
-              sum = @issue[:idea].size
-              end %>
-              <th class="column_sum_<%= sum %>">X</th>               
-              <% end %>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>      
-  </div>
-  <!-- votes of all users  -->
+              <tr>
+                <th>Total</th>
+                <% sn=0 %>
+                <% @issue[:idea].each do |idea| %>
+                <% sn+=1
+                sum = sn%@issue[:idea].size
+                if sum==0
+                sum = @issue[:idea].size
+                end %>
+                <th class="column_sum_<%= sum %>">X</th>               
+                <% end %>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          </div>      
+        </div>
+        <!-- votes of all users  -->
   <!-- <div class="content row individual"> 
   <div class="col-md-12"> <h3>Contribution of individual users are: </h3></div> 
   <% tc =0 %>
