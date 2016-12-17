@@ -25,7 +25,11 @@ window.current_issue = '<%= @issue.id %>';
       <div class="bs-callout bs-callout-danger">
           <h5 style="color:#ce4844; font-size: 20px;">Looking at the product, result and analysis given below: how satisfied are you with the product? </h5> 
           <div class="lead">
+          <% if @stars %>
                 <div id="stars" data-rating="<%= @stars[:like].presence %>" class="starrr"></div>
+          <% else %>
+                <div id="stars" class="starrr"></div>
+          <% end %>
           </div>
         </div>
         </div>
