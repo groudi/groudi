@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'issues#index'
+  root 'issues#get_issue'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'discussion/:id' => 'issues#get_issue'
   post 'vote/:id' => 'issues#vote'
   get 'result/:id' => 'issues#result'
+  get 'index' => 'issues#index'
   post 'invite/:id' => 'issues#invite'
   get 'analytics/:id' => 'analytics#show'
   resource :issues

@@ -15,6 +15,26 @@ var readyDataSource = function() {
     if(current_page.split('/')[1]=="result"){
       set_winner();
     }
+
+    // create new user clicking the link in the welcome mt groudi email from subscription
+    if(current_page.split('/')[2]=="sign_up"){
+      $("#user_session_email").val(sessionStorage.getItem("user_email"));
+      $("#user_session_password").val("default");
+      $("#user_password_confirmation").val("default");
+      $("#login-btn").click();
+      
+    }
+
+    if(current_page.split('/')[2]=="sign_in" && $(".alert-danger").length>0){
+        window.location.href = window.location.protocol + "//" + window.location.host + "/users/sign_up";
+      }
+    else if(current_page.split('/')[2]=="sign_in"){
+      var user_email = window.location.hash.split('#')[1];
+      sessionStorage.setItem("user_email", user_email);
+      $("#user_session_email").val(user_email);
+      $("#user_session_password").val("default");
+      $("#login-btn").click();
+    }
  };
 
  function crud_issues(){

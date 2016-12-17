@@ -10,7 +10,9 @@ class IssuesController < ApplicationController
 
   	def get_issue
 	  respond_to do |format|
-
+	  	if !params[:id]
+	  		params[:id]="1"
+	  	end
 	    @issue = Issue.find(params[:id])
 	    @issue_attr = Standard.where(issue_id: params[:id])
 	    format.html {
@@ -104,7 +106,7 @@ class IssuesController < ApplicationController
   			end
   			flash[:notice] = "You have successfully casted your votes."
   		end
-  		redirect_to action: "get_issue"
+  		redirect_to action: "result"
   	end
 
   	def result
