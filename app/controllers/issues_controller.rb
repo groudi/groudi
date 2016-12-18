@@ -36,7 +36,8 @@ class IssuesController < ApplicationController
 			:desc => params[:issue_desc],
 			:status => params[:issue_status],
 			:idea => params[:issue_idea],
-			:creator => authenticate_user![:id]
+			:creator => authenticate_user![:id],
+			:invited_email => current_user.email
 		}
 		issue_detail = Issue.new(data_source_hash)
 		issue_detail.save
