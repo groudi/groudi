@@ -13,7 +13,7 @@ class IssuesController < ApplicationController
 	  	if !params[:id]
 	  		params[:id]="1"
 	  		invited_list = Issue.where(id: params[:id]).first[:invited_email]
-			invited_list = invited_list | current_user.email 
+			invited_list = invited_list | [current_user.email] 
 			Issue.where(id: params[:id]).first.update_column(:invited_email, invited_list )
 	  	end
 	    @issue = Issue.find(params[:id])
