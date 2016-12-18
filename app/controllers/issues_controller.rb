@@ -2,7 +2,7 @@ class IssuesController < ApplicationController
 	require 'pp'
 	before_action :authenticate_user!
 	def index
-		records = Issue.all;
+		records = Issue.where("invited_email like ?", "%#{current_user.email}%")
 		
 		@issues = records
   	end
@@ -134,9 +134,11 @@ class IssuesController < ApplicationController
   		emails = params[:invited].split(",")
   		success = []
   		emails.each do | email |
-  			success = Notifier.invitation_email(email, params[:id]).deliver_now
+  			# success = Notifier.invitation_email(email, params[:id]).deliver_now
 		end
-
+		invited_list = Issue.where(id: params[:id]).first[:invited_email]
+		invited_list = invited_list | emails
+		Issue.where(id: params[:id]).first.update_column(:invited_email, invited_list )
 		respond_to do |format|
 	    	format.json { render :json => {:message => "Email notification sent to valid emails."}}
 	  	end
