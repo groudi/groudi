@@ -23,7 +23,7 @@
           <p><%= @issue.desc %> </p> 
         </div>
         <div class="bs-callout bs-callout-info"> 
-          <h4>Your Contribution</h4><h5>Total <code>12</code> contributors including you</h5>
+          <h4>Your Contribution</h4><h5>Total <code><%= @issue.invited_email.length %></code> contributors including you</h5>
           <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
             <table class="table table-bordered">
