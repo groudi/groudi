@@ -48,7 +48,8 @@ class AnalyticsController < ApplicationController
 
 		# variance calculation for each cell 
 		variance_data.each do | a |
-			@cell_variance << a.variance.round(2)
+			# @cell_variance << a.variance.round(2)
+			@cell_variance << a.variance
 		end
 
 		# sensitivity calculation for the discussion
