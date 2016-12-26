@@ -40,7 +40,7 @@ class IssuesController < ApplicationController
 			:status => params[:issue_status],
 			:idea => params[:issue_idea],
 			:creator => authenticate_user![:id],
-			:invited_email => current_user.email
+			:invited_email => current_user.email.split(',')
 		}
 		issue_detail = Issue.new(data_source_hash)
 		issue_detail.save
@@ -88,7 +88,7 @@ class IssuesController < ApplicationController
   			(1..params[:vote_cast].length).each do |col|
 				(1..row_count).each do |row|
 					if(params[:vote_cast][col.to_s][row-1] != params[:edit_vote_cast][col.to_s][row-1])
-						Vote.where( issue_id: params[:id], row: row, column: col, user_id: current_user.id ).first.update_column( :value, params[:vote_cast][col.to_s][row-1] )
+						Vote.where( issue_id: params[:id], row: row, column: col, user_id: current_user.id ).first.update_column( :value, params[:vote_cast][col.to_s][row-1])
 		  			end
 				end
   			end

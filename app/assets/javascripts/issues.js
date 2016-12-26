@@ -256,13 +256,14 @@ var readyDataSource = function() {
 }
 
 function set_winner(){
-  var winner_value = 0;
+  var winner_value = 0.0;
   var winner=[];
   var message = "The winner are: ";
   $('.bs-callout-info *[class^="column_sum_"]').each(function(){
+    $(this).text(parseFloat($(this).text()).toFixed(2));
     winner.push($(this).attr('class'));
-    if(parseInt($(this).text()) >= winner_value){
-      winner_value = parseInt($(this).text());
+    if(parseFloat($(this).text()) >= winner_value){
+      winner_value = parseFloat($(this).text());
     }
   });
   $('.bs-callout-info *[class^="column_sum_"]').each(function(){

@@ -20,7 +20,7 @@ window.current_issue = '<%= @issue.id %>';
         </div>
       </div>      
     </div>
-    <div class="content row"> 
+    <!-- <div class="content row"> 
     <div class="col-md-12">
       <div class="bs-callout bs-callout-danger">
           <h5 style="color:#ce4844; font-size: 20px;">Looking at the product, result and analysis given below: how satisfied are you with the product? </h5> 
@@ -33,183 +33,206 @@ window.current_issue = '<%= @issue.id %>';
           </div>
         </div>
         </div>
-    </div>
-    <div class="content row">    
-      <div class="col-md-12">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#standard_deviation" aria-controls="standard_deviation" role="tab" data-toggle="tab">Standard Deviation</a></li>
-          <li role="presentation"><a href="#variance" aria-controls="variance" role="tab" data-toggle="tab">Variance</a></li>
-          <li role="presentation"><a href="#stats" aria-controls="stats" role="tab" data-toggle="tab">Table Statistics</a></li>
-        </ul>
+      </div> -->
+      <div class="content row">    
+        <div class="col-md-12">
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#stablity" aria-controls="stablity" role="tab" data-toggle="tab">Result Stablity</a></li>
+            <li role="presentation"><a href="#standard_deviation" aria-controls="standard_deviation" role="tab" data-toggle="tab">Deviation from Mean</a></li>
+            <li role="presentation"><a href="#variance" aria-controls="variance" role="tab" data-toggle="tab">Variance</a></li>
+          </ul>
 
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="standard_deviation">
-            <div class="content row individual"> 
-              <div class="col-md-12"> <h3>Deviation from final result for each users are: </h3>
-                <p>Note: Values closer to zero are desirable</p></div> 
-                <% tc =0 %>
-                <% @votes_hash.each do |user_vote| %>  
-                <% tc +=1 %>
-                <div class="col-md-6">
-                 <h5><code><%= user_vote[1]["email"] %></code></h5>
-                 <table class="table table-bordered tbl_<%= tc %>">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <% sn=0 %>
-                      <% n=0 %>
-                      <% @issue[:idea].each do |idea| %>
-                      <% sn+=1
-                      counter = sn%@issue[:idea].size
-                      if counter==0
-                      counter = @issue[:idea].size
-                      end %>
-                      <th  title="<%= idea %>">X_<%= counter %></th>   
-                      <% end %>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @issue_attr.each do |criterion| %>
-                    <% n+=1 %>
-                    <tr>                            
-                      <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
-                      <% @issue[:idea].each do |idea| %>
-                      <% sn+=1
-                      counter = sn%@issue[:idea].size
-                      if counter==0
-                      counter = @issue[:idea].size
-                      end
-                      variation = ((@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) - user_vote[1][counter][n].value)
-                      %>
-                      <% if variation > 1.5 || variation < -1.5 %>
-                      <%= javascript_tag do %>
-                      analysis_msg += ("<code><%= user_vote[1]['email']  %></code> has highly conflicting prespective about <code><%= idea  %> / <%= criterion.title  %></code> with the deviation of <code><%= variation  %></code> <br>");
-                      <% end %>
-                      <% end %>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="standard_deviation">
+              <div class="content row individual"> 
+                <div class="col-md-12"> <h3>Deviation from final result for each users are: </h3>
+                  <p>Note: Values closer to zero are desirable</p></div> 
+                  <% tc =0 %>
+                  <% @votes_hash.each do |user_vote| %>  
+                  <% tc +=1 %>
+                  <div class="col-md-6">
+                   <h5><code><%= user_vote[1]["email"] %></code></h5>
+                   <table class="table table-bordered tbl_<%= tc %>">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <% sn=0 %>
+                        <% n=0 %>
+                        <% @issue[:idea].each do |idea| %>
+                        <% sn+=1
+                        counter = sn%@issue[:idea].size
+                        if counter==0
+                        counter = @issue[:idea].size
+                        end %>
+                        <th  title="<%= idea %>">X_<%= counter %></th>   
+                        <% end %>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @issue_attr.each do |criterion| %>
+                      <% n+=1 %>
+                      <tr>                            
+                        <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                        <% @issue[:idea].each do |idea| %>
+                        <% sn+=1
+                        counter = sn%@issue[:idea].size
+                        if counter==0
+                        counter = @issue[:idea].size
+                        end
+                        variation = ((@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) - user_vote[1][counter][n].value)
+                        %>
+                        <% if variation > 1.5 || variation < -1.5 %>
+                        <%= javascript_tag do %>
+                        analysis_msg += ("<code><%= user_vote[1]['email']  %></code> has highly conflicting prespective about <code><%= idea  %> / <%= criterion.title  %></code> with the deviation of <code><%= variation  %></code> <br>");
+                        <% end %>
+                        <% end %>
 
-                      <td>
-                        <div class="col-md-6 vote_cast vote_<%= counter %>">
-                          <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= variation %>" >
-                        </div>
-                        <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
-                      </td>                
+                        <td>
+                          <div class="col-md-6 vote_cast vote_<%= counter %>">
+                            <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= variation %>" >
+                          </div>
+                          <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
+                        </td>                
+                        <% end %>
+                      </tr>
                       <% end %>
-                    </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+                <% end %>      
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Potential Risk Analysis of the results:</h4>
+                  <div class="deviation_msg"></div>
+                </div>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="variance">
+              <div class="content row individual"> 
+                <div class="col-md-12"> <h3>Variance of voting result matrix for each cells is: </h3>
+                  <p>Note: Smaller values are desirable.</p></div>
+                  <div class="col-md-6">
+                   <table class="table table-bordered tbl_<%= tc %>">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <% sn=0 %>
+                        <% n=0 %>
+                        <% @issue[:idea].each do |idea| %>
+                        <%
+                        counter = sn%@issue[:idea].size
+                        if counter==0
+                        counter = @issue[:idea].size
+                        end %>
+                        <th  title="<%= idea %>">X_<%= counter %></th>   
+                        <% end %>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @issue_attr.each do |criterion| %>
+                      <% n+=1 %>
+                      <tr>                            
+                        <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                        <% @issue[:idea].each do |idea| %>
+                        <% sn+=1
+                        counter = sn%@issue[:idea].size
+                        if counter==0
+                        counter = @issue[:idea].size
+                        end %>
+                        <td>
+                          <div class="col-md-6 vote_cast vote_<%= counter %>">
+                            <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%= @cell_variance[sn-1] %>" >
+                          </div>
+                        </td>                
+                        <% end %>
+                      </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+
+                </div>     
+              </div>
+              <div class="alert alert-danger" role="alert">
+                Any cell with variance more than tolerance level(for e.g. 2) are poniting risk.
+              </div>
+              <div>
+                <strong>Explanation:</strong> A small variance indicates that the data points tend to be very close to the mean, and to each other. A high variance indicates that the data points are very spread out from the mean, and from one another. Variance is the average of the squared distances from each point to the mean.<br><br>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="stablity">
+              <div class="col-md-12"> 
+                <h3>Unstable changes : </h3>
+                <div class="alert alert-danger" role="alert">
+                  This result is <span style="font-size: 22px;">only <%= @stablity_percent %>%</span> stable.
+                </div>
+                <strong>When one of the user changes voting at any one of the specific cells, the whole result chages as an effect. Those unstablity are as listed below</strong><br><br>
+                <% @stablity_cond_msg.each do | msg | %>
+                <%= msg.html_safe %>
+                <% end %>
+              </div> 
+              <% tc =0 %>
+              <% @votes_hash.each do |user_vote| %>  
+              <% tc +=1 %>
+              <div class="col-md-6">
+               <h5><code><%= user_vote[1]["email"] %></code></h5>
+               <table class="table table-bordered tbl_<%= tc %>">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <% sn=0 %>
+                    <% n=0 %>
+                    <% @issue[:idea].each do |idea| %>
+                    <% sn+=1
+                    counter = sn%@issue[:idea].size
+                    if counter==0
+                    counter = @issue[:idea].size
+                    end %>
+                    <th  title="<%= idea %>">X_<%= counter %></th>   
                     <% end %>
-                  </tbody>
-                </table>
-
-              </div>
-              <% end %>      
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <h4>Potential Risk Analysis of the results:</h4>
-                <div class="deviation_msg"></div>
-              </div>
-            </div>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="variance">
-            <div class="content row individual"> 
-              <div class="col-md-12"> <h3>Variance of voting result matrix for each users are: </h3>
-                <p>Note: Smaller values are desirable. (Max value possible: 16)</p></div> 
-                <% tc =0 %>
-                <% @votes_hash.each do |user_vote| %>  
-                <% tc +=1 %>
-                <div class="col-md-6">
-                 <h5><code><%= user_vote[1]["email"] %></code></h5>
-                 <table class="table table-bordered tbl_<%= tc %>">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <% sn=0 %>
-                      <% n=0 %>
-                      <% @issue[:idea].each do |idea| %>
-                      <% sn+=1
-                      counter = sn%@issue[:idea].size
-                      if counter==0
-                      counter = @issue[:idea].size
-                      end %>
-                      <th  title="<%= idea %>">X_<%= counter %></th>   
-                      <% end %>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @issue_attr.each do |criterion| %>
-                    <% n+=1 %>
-                    <tr>                            
-                      <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
-                      <% @issue[:idea].each do |idea| %>
-                      <% sn+=1
-                      counter = sn%@issue[:idea].size
-                      if counter==0
-                      counter = @issue[:idea].size
-                      end %>
-                      <td>
-                        <div class="col-md-6 vote_cast vote_<%= counter %>">
-                          <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%=((@aggregate_hash[counter.to_s][n.to_s]/Float(@votes_hash.length)).round(2) - user_vote[1][counter][n].value) ** 2 %>" >
-                        </div>
-                        <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
-                      </td>                
-                      <% end %>
-                    </tr>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @issue_attr.each do |criterion| %>
+                  <% n+=1 %>
+                  <tr>                            
+                    <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.title + ': ' + criterion.desc %>">Y_<%= n %>/<%= criterion.weight %> </code></th>
+                    <% @issue[:idea].each do |idea| %>
+                    <% sn+=1
+                    counter = sn%@issue[:idea].size
+                    if counter==0
+                    counter = @issue[:idea].size
+                    end %>
+                    <td>
+                      <div class="col-md-6 vote_cast vote_<%= counter %>">
+                        <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control aggregate" value="<%=user_vote[1][counter][n].value %>" >
+                      </div>
+                      <div class="col-md-6 vote_point" style="color:#bbb; display: none;">0</div>
+                    </td>                
                     <% end %>
-                  </tbody>
-                </table>
+                  </tr>
+                  <% end %>
+                  <tr>
+                    <th>Total</th>
+                    <% sn=0 %>
+                    <% @issue[:idea].each do |idea| %>
+                    <% sn+=1
+                    sum = sn%@issue[:idea].size
+                    if sum==0
+                    sum = @issue[:idea].size
+                    end %>
 
-              </div>
-              <% end %>      
+                    <th class="column_sum_<%= sum %>">X</th>               
+                    <% end %>
+                  </tr>
+                </tbody>
+              </table>
+
             </div>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="stats">
-            <div class="content row individual"> 
-              <div class="col-md-12"> <h3>The statistics based on the whole ratings given in this discussion topic is as below: </h3>
-              <code>Variance</code>
-              <% if @key_stats[:variance] < 1.1
-                  class_variance = "alert-success"
-                elsif @key_stats[:variance] >= 1.1 && @key_stats[:variance] < 1.6
-                  class_variance = "alert-warning"
-                elsif @key_stats[:variance] >= 1.6
-                  class_variance = "alert-danger"
-               end %>
-              <div class="alert <%= class_variance %>" role="alert">The variance of the overall votings in this issue is <%= @key_stats[:variance] %></div>
-
-              <code>Standard Deviation</code>
-              <% if @key_stats[:standard_deviation] < 1.1
-                  class_sd = "alert-success"
-                elsif @key_stats[:standard_deviation] >= 1.1 && @key_stats[:standard_deviation] < 1.6
-                  class_sd = "alert-warning"
-                elsif @key_stats[:standard_deviation] >= 1.6
-                  class_sd = "alert-danger"
-               end %>
-              <div class="alert <%= class_sd %>" role="alert">The standard deviation of the overall votings in this issue is <%= @key_stats[:standard_deviation] %></div>
-
-              <code>Min / Max</code>
-              <% if @key_stats[:min] ==1 && @key_stats[:max] ==5
-                  class_min = "alert-success"
-                  min_msg = "The users have voted using all the available range from 1-5. "
-                else
-                  class_min = "alert-danger"
-                  min_msg = "Encourage users to vote to the extremities, as low as 1 to as high as 5."
-               end %>
-              <div class="alert <%= class_min %>" role="alert"><%= min_msg %></div>
-
-              <code>Range</code>
-              <% if @key_stats[:range] < 4
-                  class_range = "alert-danger"
-                  msg_range = "Some of available voting options, i.e. from (1, 2, 3, 4, 5) were not used."
-                else
-                  class_range = "alert-success"
-                  msg_range = "All available voting options, i.e. from (1, 2, 3, 4, 5) were used. "
-               end %>
-              <div class="alert <%= class_range %>" role="alert"><%= msg_range %></div>
-
-              <code>Mean / Median / Mode</code>
-              <div class="alert alert-info" role="alert">The mean of the overall voting is <%= @key_stats[:mean] %>, median is <%= @key_stats[:median] %>, mode is <%= @key_stats[:mode] %></div>
-              </div>
-            </div>
+            <% end %>  
           </div>
         </div>
       </div>      
@@ -218,7 +241,170 @@ window.current_issue = '<%= @issue.id %>';
   </div>
 
 </div>
+
+
+
+
+
+<% if @comments.length > 0 %>
+
+<% current_section = @comments.first.grid %> 
+<!-- creation of first modal popup -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= @comments.first.grid %>" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= @comments.first.grid %></code></h4>
+      </div>
+      <div class="modal-body">
+        <!-- create modal popup for each next comment available -->
+        <%@comments.each do |comment|
+        if comment.grid==current_section %>
+
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <% else %>
+        <% current_section = comment.grid %>
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_<%= current_section %>" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: <%= current_section %></code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= comment.user_id %></strong> <span class="text-muted"> <%= time_ago_in_words(comment.updated_at) %> ago</span>
+            </div>
+            <div class="comment-main-thread">
+              <div>
+                <%= comment.comment %>
+              </div>
+              <% if comment.user_id == current_user.email %>
+              <div><span class="glyphicon glyphicon-trash trash-red" data-id="<%= comment.id %>" aria-hidden="true"></span></div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <% end %>
+        <!-- closing of the first default modal popup -->
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
 <!-- modal popup dynamic generator ends here -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="com_template" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="label-title"><code>Box Plot: </code></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2 reply-comment">
+            <div class="thumbnail">
+              <%= image_tag "avatar.png" %>
+            </div>
+          </div>
+
+          <div class="col-sm-10">
+            <div class="comment-user-name">
+              <strong><%= current_user.email %></strong>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="your response">
+              <span class="input-group-btn">
+                <button class="btn btn-default post-comment" data-grid="" type="button">Post</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- <%= render partial: 'partial/footer' %> -->
 <script type="text/javascript">
   $( document ).ready(function() {
