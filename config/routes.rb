@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'index' => 'issues#index'
   post 'invite/:id' => 'issues#invite'
   get 'analytics/:id' => 'analytics#show'
+  get 'feedback' => 'analytics#feedback'
   resource :issues
 
   delete 'comment/:id' => 'comment#destroy'

@@ -1,0 +1,37 @@
+<div class="container">
+  <%= render partial: 'partial/header' %>
+	<div class="content row"> 
+		<div class="col-md-12 no-margin-left" style="padding-top:60px;">
+			<div class="ajax-alert alert alert-info" style="display:none;" role="alert">
+				<p></p>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="bs-callout bs-callout-info">
+				<h5 style="color:#1b809e; font-size: 20px;">With our product, to what extent did we 
+					convinced you that there are potential risks in your descision making?
+				</h5> 
+				<div class="lead">
+					<% if @stars %>
+					<div id="stars" data-rating="<%= @stars[:like].presence %>" class="starrr"></div>
+					<% else %>
+					<div id="stars" class="starrr"></div>
+					<% end %>
+				</div>
+			</div>
+			<div class="bs-callout bs-callout-info">
+				<h5 style="color:#1b809e; font-size: 20px;">If possible, will you use this product to find out hidden potential risks in your comany's descision making?
+				</h5> Note: not for final descison making.
+				<div class="radio">
+				  <label><input type="radio" name="optradio" value="yes">Yes</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" name="optradio" value="maybe">Maybe</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" name="optradio" value="no">No</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

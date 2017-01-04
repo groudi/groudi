@@ -20,20 +20,7 @@ window.current_issue = '<%= @issue.id %>';
         </div>
       </div>      
     </div>
-    <!-- <div class="content row"> 
-    <div class="col-md-12">
-      <div class="bs-callout bs-callout-danger">
-          <h5 style="color:#ce4844; font-size: 20px;">Looking at the product, result and analysis given below: how satisfied are you with the product? </h5> 
-          <div class="lead">
-          <% if @stars %>
-                <div id="stars" data-rating="<%= @stars[:like].presence %>" class="starrr"></div>
-          <% else %>
-                <div id="stars" class="starrr"></div>
-          <% end %>
-          </div>
-        </div>
-        </div>
-      </div> -->
+    
       <div class="content row">    
         <div class="col-md-12">
           <!-- Nav tabs -->
@@ -239,7 +226,14 @@ window.current_issue = '<%= @issue.id %>';
     </div>
 
   </div>
-
+  <div class="content row"> 
+    <div class="col-md-12">
+      <div class="bs-callout bs-callout-info">
+          <h4>We expect your valuable feedback after going through this product. Please click <a href="/feedback"><button type="button" class="btn btn-success btn-feed ">here</button></a>
+       to share your experience with our product. It will take no longer than 40 seconds.</h4> 
+        </div>
+        </div>
+      </div>
 </div>
 
 

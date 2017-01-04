@@ -7,8 +7,6 @@ class AnalyticsController < ApplicationController
 		@issue_attr = Standard.where(issue_id: params[:id]).order(id: :asc)
 		votes = Vote.where(issue_id: params[:id]).order(column: :asc)
 		pp votes
-
-		@stars = Like.where(creator: current_user.id).first
 		
 		@votes_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
 		@aggregate_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
@@ -78,5 +76,10 @@ class AnalyticsController < ApplicationController
 		pp "=============================================="
 		@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
 	end
+
+	def feedback
+		@stars = Like.where(creator: current_user.id).first
+	end
+
 end
 

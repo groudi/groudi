@@ -15,7 +15,6 @@ var readyDataSource = function() {
     if(current_page.split('/')[1]=="result"){
       set_winner();
     }
-
     // create new user clicking the link in the welcome mt groudi email from subscription
     if(current_page.split('/')[2]=="sign_up"){
       $("#user_session_email").val(sessionStorage.getItem("user_email"));
@@ -57,6 +56,10 @@ var readyDataSource = function() {
 		e.preventDefault();
 		return false;
 	});
+
+  $(".btn-feed").click(function(){
+    window.location.href = "/feedback";
+  });
 
 	$(document).on('click', '.btn-add-attribute', function(e)
     {
