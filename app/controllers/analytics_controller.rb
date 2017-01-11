@@ -74,6 +74,7 @@ class AnalyticsController < ApplicationController
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
 		pp "=============================================="
+		pp variance_data
 		@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
 	end
 
