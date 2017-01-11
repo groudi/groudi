@@ -5,8 +5,10 @@ class AnalyticsController < ApplicationController
 	def show
 		@issue = Issue.find(params[:id])
 		@issue_attr = Standard.where(issue_id: params[:id]).order(id: :asc)
-		# votes = Vote.where(issue_id: params[:id]).order(column: :asc)
-		votes = Vote.where(issue_id: params[:id]).order(column: :asc, row: :asc)
+		rand_users = Vote.uniq.pluck(:user_id).sample(5)
+		rand_users << current_user.id
+		pp rand_users
+		votes = Vote.where(issue_id: params[:id], user_id: rand_users ).order(column: :asc, row: :asc)
 		pp votes
 		
 		@votes_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
