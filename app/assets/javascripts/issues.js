@@ -236,7 +236,7 @@ var readyDataSource = function() {
     count = $(this).attr('data-counter');
     var totalPoints = 0;
 
-    $(this).closest('td').find('.vote_point').text($(this)[0].value*$(this).attr('data-weight'));
+    $(this).closest('td').find('.vote_point').text(round($(this)[0].value*$(this).attr('data-weight'),2));
     $(parent_table).find('.vote_'+count).each(function(){
         totalPoints = parseFloat($(this).parent().find('.vote_point').text()) + totalPoints;
     });
@@ -308,4 +308,22 @@ function set_winner(){
       $('.tbl_'+table_counter+' tr th:nth-child('+high+')').css('color','#c7254e'); 
     });
   });
+}
+function round(value, exp) {
+  if (typeof exp === 'undefined' || +exp === 0)
+    return Math.round(value);
+
+  value = +value;
+  exp = +exp;
+
+  if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+    return NaN;
+
+  // Shift
+  value = value.toString().split('e');
+  value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+  // Shift back
+  value = value.toString().split('e');
+  return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
 }
