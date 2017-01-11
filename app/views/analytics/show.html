@@ -36,14 +36,8 @@ window.current_issue = '<%= @issue.id %>';
               <div class="content row individual"> 
                 <div class="col-md-12"> <h3>Deviation from final result for each users are: </h3>
                   <p>Note: Values closer to zero are desirable</p></div> 
-                  <div class="row">
-                <div class="col-md-12">
-                  <h4>Potential Risk Analysis of the results:</h4>
-                  <div class="deviation_msg"></div>
-                </div>
-              </div>
-                  <% tc =0 %> 
-                  <% @votes_hash.take(6).each do |user_vote| %>  
+                  <% tc =0 %>
+                  <% @votes_hash.each do |user_vote| %>  
                   <% tc +=1 %>
                   <div class="col-md-6">
                    <h5><code><%= user_vote[1]["email"] %></code></h5>
@@ -78,7 +72,7 @@ window.current_issue = '<%= @issue.id %>';
                         %>
                         <% if variation > 1.5 || variation < -1.5 %>
                         <%= javascript_tag do %>
-                        analysis_msg += ("<code><%= user_vote[1]['email']  %></code> has highly conflicting prespective about <code><%= idea  %> / <%= criterion.title  %></code> compared to team with the deviation of <code><%= variation  %></code> <br>");
+                        analysis_msg += ("<code><%= user_vote[1]['email']  %></code> has highly conflicting prespective about <code><%= idea  %> / <%= criterion.title  %></code> with the deviation of <code><%= variation  %></code> <br>");
                         <% end %>
                         <% end %>
 
@@ -96,6 +90,12 @@ window.current_issue = '<%= @issue.id %>';
 
                 </div>
                 <% end %>      
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Potential Risk Analysis of the results:</h4>
+                  <div class="deviation_msg"></div>
+                </div>
               </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="variance">
@@ -162,7 +162,7 @@ window.current_issue = '<%= @issue.id %>';
                 <% end %>
               </div> 
               <% tc =0 %>
-              <% @votes_hash.take(6).each do |user_vote| %>  
+              <% @votes_hash.each do |user_vote| %>  
               <% tc +=1 %>
               <div class="col-md-6">
                <h5><code><%= user_vote[1]["email"] %></code></h5>
@@ -229,7 +229,7 @@ window.current_issue = '<%= @issue.id %>';
   <div class="content row"> 
     <div class="col-md-12">
       <div class="bs-callout bs-callout-info">
-          <h4>We expect your valuable feedback after going through this product. Please click <button type="button" class="btn btn-success btn-feed ">here</button>
+          <h4>We expect your valuable feedback after going through this product. Please click <a href="/feedback"><button type="button" class="btn btn-success btn-feed ">here</button></a>
        to share your experience with our product. It will take no longer than 40 seconds.</h4> 
         </div>
         </div>
