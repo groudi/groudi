@@ -5,7 +5,8 @@ class AnalyticsController < ApplicationController
 	def show
 		@issue = Issue.find(params[:id])
 		@issue_attr = Standard.where(issue_id: params[:id]).order(id: :asc)
-		votes = Vote.where(issue_id: params[:id]).order(column: :asc)
+		# votes = Vote.where(issue_id: params[:id]).order(column: :asc)
+		votes = Vote.where(issue_id: params[:id]).order(column: :asc, row: :asc)
 		pp votes
 		
 		@votes_hash = Hash.new { |hash, key| hash[key] = Hash.new(&hash.default_proc) }
@@ -74,7 +75,6 @@ class AnalyticsController < ApplicationController
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
 		pp "=============================================="
-		pp variance_data
 		@comments = Comment.joins(:issue).where("comments.issue_id = "+params[:id]).order('grid ASC')
 	end
 

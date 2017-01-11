@@ -42,8 +42,8 @@ window.current_issue = '<%= @issue.id %>';
                   <div class="deviation_msg"></div>
                 </div>
               </div>
-                  <% tc =0 %>
-                  <% @votes_hash.each do |user_vote| %>  
+                  <% tc =0 %> 
+                  <% @votes_hash.take(6).each do |user_vote| %>  
                   <% tc +=1 %>
                   <div class="col-md-6">
                    <h5><code><%= user_vote[1]["email"] %></code></h5>
