@@ -22,68 +22,7 @@
           <h4><%= @issue.title %> </h4>
           <p><%= @issue.desc %> </p> 
         </div>
-        <div class="bs-callout bs-callout-info"> 
-          <h4>Your Contribution</h4><h5>Total <code><%= @issue.invited_email.length %></code> contributors including you</h5>
-          <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
-          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th> Criterion / Weight</th>
-                  <% sn=0 %>
-                  <% n=0 %>
-                  <% @issue[:idea].each do |idea| %>
-                  <th><%= idea %></th>   
-                  <% end %>
-                </tr>
-              </thead>
-              <tbody>
-                <% @issue_attr.each do |criterion| %>
-                <% n+=1 %>
-                <tr>                            
-                  <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>"><%= criterion.title %> / <%= criterion.weight %> </code></th>
-                  <% @issue[:idea].each do |idea| %>
-                  <% sn+=1
-                  counter = sn%@issue[:idea].size
-                  if counter==0
-                  counter = @issue[:idea].size
-                  end %>
-                  <td>
-                    <div class="col-md-9 vote_cast vote_<%= counter %>">
-                      <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" value="<%= @votes_hash[counter][n][:value].presence %>" name='vote_cast[<%= counter %>][]' required>
-                    </div>
-                    <% if @votes_hash.length>1 %>
-                    <input type="hidden" value="<%= @votes_hash[counter][n][:value].presence %>" name='edit_vote_cast[<%= counter %>][]' >
-                    <% end %>
-                    </div>
-                    <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
-                  </td>                
-                  <% end %>
-                </tr>
-                <% end %>
-                <tr>
-                  <th>Total</th>
-                  <% sn=0 %>
-                  <% @issue[:idea].each do |idea| %>
-                  <% sn+=1
-                  sum = sn%@issue[:idea].size
-                  if sum==0
-                  sum = @issue[:idea].size
-                  end %>
-                  <th class="column_sum_<%= sum %>">X</th>               
-                  <% end %>
-                </tr>
-              </tbody>
-            </table>
-            <% if @issue.status==true %>
-            <input type="submit" class="btn btn-primary" value="Cast Vote" />
-            <% end %>
-          </form>
-        </div>
-      </div>      
-    </div>
-  </div>
-  <div class="bs-callout bs-callout-danger" id="callout-glyphicons-dont-mix"> 
+        <div class="bs-callout bs-callout-danger" id="callout-glyphicons-dont-mix"> 
   <h4>Guidelines</h4>
    
    
@@ -143,6 +82,68 @@
   </div>
 </div>
 </div>
+        <div class="bs-callout bs-callout-info"> 
+          <h4>Your Contribution</h4><h5>Total <code><%= @issue.invited_email.length %></code> contributors including you</h5>(The contributors are virtual to help you understand the working of the group descision tool.)
+          <form class="form-horizontal" role="form" id="vote-form" action="/vote/<%= @issue.id %>" method="post" data-controller="main" data-label-title="Vote Issue">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th> Criterion / Weight</th>
+                  <% sn=0 %>
+                  <% n=0 %>
+                  <% @issue[:idea].each do |idea| %>
+                  <th><%= idea %></th>   
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @issue_attr.each do |criterion| %>
+                <% n+=1 %>
+                <tr>                            
+                  <th scope="row"><code style="cursor:pointer" class="highlighter-rouge" title="<%= criterion.desc %>"><%= criterion.title %> / <%= criterion.weight %> </code></th>
+                  <% @issue[:idea].each do |idea| %>
+                  <% sn+=1
+                  counter = sn%@issue[:idea].size
+                  if counter==0
+                  counter = @issue[:idea].size
+                  end %>
+                  <td>
+                    <div class="col-md-9 vote_cast vote_<%= counter %>">
+                      <input data-weight="<%= criterion.weight %>" data-counter="<%= counter %>" data-box="<%= criterion.title %>_<%= idea %>" data-grid="<%= n %>_<%= counter %>" class="form-control" type="number" pattern="^[0-5]" min="0" max="5" value="<%= @votes_hash[counter][n][:value].presence %>" name='vote_cast[<%= counter %>][]' required>
+                    </div>
+                    <% if @votes_hash.length>1 %>
+                    <input type="hidden" value="<%= @votes_hash[counter][n][:value].presence %>" name='edit_vote_cast[<%= counter %>][]' >
+                    <% end %>
+                    </div>
+                    <div class="col-md-3 vote_point" style="color:#bbb;">0</div>
+                  </td>                
+                  <% end %>
+                </tr>
+                <% end %>
+                <tr>
+                  <th>Total</th>
+                  <% sn=0 %>
+                  <% @issue[:idea].each do |idea| %>
+                  <% sn+=1
+                  sum = sn%@issue[:idea].size
+                  if sum==0
+                  sum = @issue[:idea].size
+                  end %>
+                  <th class="column_sum_<%= sum %>">X</th>               
+                  <% end %>
+                </tr>
+              </tbody>
+            </table>
+            <% if @issue.status==true %>
+            <input type="submit" class="btn btn-primary" value="Cast Vote" />
+            <% end %>
+          </form>
+        </div>
+      </div>      
+    </div>
+  </div>
+  
   <!-- comment starts here -->
   <% if @comments.length > 0 %>
   <div class="row">
