@@ -61,6 +61,10 @@ $( window ).load(function() {
     window.location.href = window.location.protocol + "//" + window.location.host + "/feedback";
   });
 
+  $(".analytics").click(function(){
+    window.location.href = window.location.protocol + "//" + window.location.host + $(this).attr('data-address');
+  });
+
 	$(document).on('click', '.btn-add-attribute', function(e)
     {
         e.preventDefault();
