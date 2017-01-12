@@ -1,4 +1,4 @@
-var readyDataSource = function() {
+$( window ).load(function() { 
     crud_issues();
     $( ".comment-box-name code strong" ).each(function() {
 
@@ -34,7 +34,7 @@ var readyDataSource = function() {
       $("#user_session_password").val("default");
       $("#login-btn").click();
     }
- };
+ });
 
  function crud_issues(){
  	$(document).on('click', '.btn-add-issue', function(e)
