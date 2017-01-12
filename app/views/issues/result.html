@@ -21,7 +21,7 @@ window.current_issue = '<%= @issue.id %>';
         <div class="alert alert-danger" role="alert">
           <h4>This is a multi million dollar project, we have detected risk of conflict between two user's votes!<br><br>
           <div class="float_left" >
-          Go to </div><a href="/analytics/<%= @issue.id %>"><button type="button" class="btn btn-danger float_left">Analytics</button></a>  to see the result analysis and potential risks.</h4>
+          Go to </div><button type="button" data-address="/analytics/<%= @issue.id %>" class="btn btn-danger float_left analytics">Analytics</button>  to see the result analysis and potential risks.</h4>
         </div>
         <div class="bs-callout bs-callout-info"> 
           <h4>The aggregate voting table as calculated from <code><%= @votes_hash.length %></code> contributors including you:</h4><h5></h5>
