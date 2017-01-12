@@ -36,6 +36,12 @@ window.current_issue = '<%= @issue.id %>';
               <div class="content row individual"> 
                 <div class="col-md-12"> <h3>Deviation from final result for each users are: </h3>
                   <p>Note: Values closer to zero are desirable</p></div> 
+                  <div class="row">
+                <div class="col-md-12">
+                  <h4>Potential Risk Analysis of the results:</h4>
+                  <div class="deviation_msg"></div>
+                </div>
+              </div>
                   <% tc =0 %>
                   <% @votes_hash.each do |user_vote| %>  
                   <% tc +=1 %>
@@ -91,12 +97,7 @@ window.current_issue = '<%= @issue.id %>';
                 </div>
                 <% end %>      
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <h4>Potential Risk Analysis of the results:</h4>
-                  <div class="deviation_msg"></div>
-                </div>
-              </div>
+              
             </div>
             <div role="tabpanel" class="tab-pane" id="variance">
               <div class="content row individual"> 
