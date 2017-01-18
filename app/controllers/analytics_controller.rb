@@ -65,11 +65,11 @@ class AnalyticsController < ApplicationController
 
 			if(winner_set_add.rindex(winner_set_add.max) != points.rindex(points.max) && vote.value < 5)
 				change_user = User.find(vote.user_id).email
-				@stablity_cond_msg << "<code>" + change_user + " </code> increases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_add.rindex(winner_set_add.max)]+"</code><br> "
+				@stablity_cond_msg << change_user + " increases vote by 1 on " + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + ", new winner will be "+ @issue[:idea][winner_set_add.rindex(winner_set_add.max)]
 			end
 			if(winner_set_dec.rindex(winner_set_dec.max) != points.rindex(points.max) && vote.value > 2)
 				change_user = User.find(vote.user_id).email
-				@stablity_cond_msg << "<code>" + change_user + " </code> decreases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_dec.rindex(winner_set_dec.max)]+"</code><br> "
+				@stablity_cond_msg << change_user + " decreases vote by 1 on " + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + ", new winner will be "+ @issue[:idea][winner_set_dec.rindex(winner_set_dec.max)]
 			end
 		end
 		@stablity_percent = ((@stablity_cond_msg.length/votes.length.to_f)*100).ceil
