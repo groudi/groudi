@@ -159,8 +159,7 @@ window.current_issue = '<%= @issue.id %>';
                 </div>
                 <strong>When one of the user changes voting at any one of the specific cells, the whole result chages as an effect. Those unstablity are as listed below</strong><br><br>
                 <% @stablity_cond_msg.each do | msg | %>
-                <%= msg %>
-                <br>
+                <%= msg.html_safe %>
                 <% end %>
               </div> 
               <% tc =0 %>
@@ -231,7 +230,7 @@ window.current_issue = '<%= @issue.id %>';
   <div class="content row"> 
     <div class="col-md-12">
       <div class="bs-callout bs-callout-info">
-          <h4>We expect your valuable feedback after going through this product. Please click <button type="button" class="btn btn-success btn-feed ">here</button>
+          <h4>We expect your valuable feedback after going through this product. Please click <a href="/feedback"><button type="button" class="btn btn-success btn-feed ">here</button></a>
        to share your experience with our product. It will take no longer than 40 seconds.</h4> 
         </div>
         </div>
