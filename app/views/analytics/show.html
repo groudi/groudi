@@ -158,9 +158,7 @@ window.current_issue = '<%= @issue.id %>';
                   This result is <span style="font-size: 22px;">only <%= @stablity_percent %>%</span> stable.
                 </div>
                 <strong>When one of the user changes voting at any one of the specific cells, the whole result chages as an effect. Those unstablity are as listed below</strong><br><br>
-                <% @stablity_cond_msg.each do | msg | %>
-                <%= msg.html_safe %>
-                <% end %>
+                <%= @stablity_cond_msg.html_safe %>
               </div> 
               <% tc =0 %>
               <% @votes_hash.each do |user_vote| %>  

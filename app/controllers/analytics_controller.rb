@@ -55,7 +55,8 @@ class AnalyticsController < ApplicationController
 
 		# sensitivity calculation for the discussion
 		
-		@stablity_cond_msg = Array.new() { |i|  }
+		@stablity_cond_msg = ""
+		unstablities = 0
 		votes.each do | vote |
 			# if user had voted one more or one less point?
 			winner_set_add = points.dup
@@ -64,15 +65,17 @@ class AnalyticsController < ApplicationController
 			winner_set_add[vote.column-1] = winner_set_add[vote.column-1] + @issue_attr[vote.row-1].weight
 
 			if(winner_set_add.rindex(winner_set_add.max) != points.rindex(points.max) && vote.value < 5)
+				unstablities +=1
 				change_user = User.find(vote.user_id).email
-				@stablity_cond_msg << "<code>" + change_user + " </code> increases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_add.rindex(winner_set_add.max)]+"</code><br> "
+				@stablity_cond_msg += "<code>" + change_user + " </code> increases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_add.rindex(winner_set_add.max)]+"</code><br> "
 			end
 			if(winner_set_dec.rindex(winner_set_dec.max) != points.rindex(points.max) && vote.value > 2)
+				unstablities +=1
 				change_user = User.find(vote.user_id).email
-				@stablity_cond_msg << "<code>" + change_user + " </code> decreases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_dec.rindex(winner_set_dec.max)]+"</code><br> "
+				@stablity_cond_msg += "<code>" + change_user + " </code> decreases vote by 1 on <code>" + @issue_attr[vote.row-1].title+ "/" + @issue[:idea][vote.column-1] + "</code>, new winner will be <code>"+ @issue[:idea][winner_set_dec.rindex(winner_set_dec.max)]+"</code><br> "
 			end
 		end
-		@stablity_percent = ((@stablity_cond_msg.length/votes.length.to_f)*100).ceil
+		@stablity_percent = ((unstablities/votes.length.to_f)*100).ceil
 		@votes_hash.each do | key, value |
 			@votes_hash[key]["email"] = User.where(:id => key).select("email").first[:email]
 		end
