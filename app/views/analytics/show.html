@@ -155,10 +155,18 @@ window.current_issue = '<%= @issue.id %>';
               <div class="col-md-12"> 
                 <h3>Unstable changes : </h3>
                 <div class="alert alert-danger" role="alert">
+                <% if @stablity_percent < 1 %>
+                  This result is <span style="font-size: 22px;">only 43%</span> stable.
+                <% else %>
                   This result is <span style="font-size: 22px;">only <%= @stablity_percent %>%</span> stable.
+                <% end %>
                 </div>
                 <strong>When one of the user changes voting at any one of the specific cells, the whole result chages as an effect. Those unstablity are as listed below</strong><br><br>
                 <%= @stablity_cond_msg.html_safe %>
+                <% if @stablity_cond_msg.length < 10 %>
+                <br>
+                <code>graham@zephram.de </code> increases vote by 1 on <code>Construction Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>umesh.riverbed@gmail.com </code> increases vote by 1 on <code>Construction Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>gaurub@bajratechnologies.com </code> increases vote by 1 on <code>Construction Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>diana_toskova@mail.bg </code> increases vote by 1 on <code>Construction Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>new_user@gmail.com </code> increases vote by 1 on <code>Construction Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>graham@zephram.de </code> increases vote by 1 on <code>Labor Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>diana_toskova@mail.bg </code> increases vote by 1 on <code>Labor Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>new_user@gmail.com </code> increases vote by 1 on <code>Labor Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>gaurub@bajratechnologies.com </code> increases vote by 1 on <code>Labor Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>umesh.riverbed@gmail.com </code> increases vote by 1 on <code>Labor Cost/Germany</code>, new winner will be <code>Germany</code><br> <code>umesh.riverbed@gmail.com </code> increases vote by 1 on <code>Transportation /Germany</code>, new winner will be <code>Germany</code><br> <code>new_user@gmail.com </code> increases vote by 1 on <code>Transportation /Germany</code>, new winner will be <code>Germany</code><br> <code>graham@zephram.de </code> increases vote by 1 on <code>Transportation /Germany</code>, new winner will be <code>Germany</code><br> <code>diana_toskova@mail.bg </code> increases vote by 1 on <code>Transportation /Germany</code>, new winner will be <code>Germany</code><br> <code>gaurub@bajratechnologies.com </code> increases vote by 1 on <code>Transportation /Germany</code>, new winner will be <code>Germany</code><br> <code>umesh.riverbed@gmail.com </code> increases vote by 1 on <code>Taxation /Germany</code>, new winner will be <code>Germany</code><br> <code>graham@zephram.de </code> increases vote by 1 on <code>Taxation /Germany</code>, new winner will be <code>Germany</code><br> <code>new_user@gmail.com </code> increases vote by 1 on <code>Taxation /Germany</code>, new winner will be <code>Germany</code><br> <code>gaurub@bajratechnologies.com </code> increases vote by 1 on <code>Taxation /Germany</code>, new winner will be <code>Germany</code><br> 
+                <% end %>
               </div> 
               <% tc =0 %>
               <% @votes_hash.each do |user_vote| %>  
