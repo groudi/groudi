@@ -3,6 +3,7 @@ class AnalyticsController < ApplicationController
 	require 'descriptive_statistics'
 	before_action :authenticate_user!
 	before_filter :get_stablity
+	skip_before_filter :get_stablity, :only => [:feedback]
 	def show
 		# @issue = Issue.find(params[:id])
 		# @issue_attr = Standard.where(issue_id: params[:id]).order(id: :asc)
